@@ -18,5 +18,11 @@ export const middleware = (controller) => {
 		await next();
 	});
 
+	// scroll to top
 	controller.on('afterStore', scrollToTop);
+
+	controller.on('afterStore', ({ controller }, next) => {
+		log.debug('Search store:', controller.store.toJSON());
+		next();
+	});
 };

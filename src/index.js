@@ -14,7 +14,7 @@ import config from '../package.json';
 import { middleware } from './scripts/custom';
 import './styles/custom.scss';
 
-import { Content } from './components/Content/Content';
+import { Main } from './components/Main';
 
 /*
 	configuration and instantiation
@@ -55,8 +55,8 @@ cntrlr.on('init', async () => {
 	new DomTargeter(
 		[
 			{
-				selector: '#searchspring-content',
-				component: <Content store={cntrlr.store} />,
+				selector: '.searchspring-container',
+				component: <Main store={cntrlr.store} />,
 			},
 		],
 		(target, elem) => {
@@ -65,5 +65,45 @@ cntrlr.on('init', async () => {
 	);
 });
 
+const addStylesheets = () => {
+	new DomTargeter(
+		[
+			{
+				selector: 'body',
+				inject: {
+					action: 'prepend',
+					element: () => {
+						const stylesheets = document.createElement('div');
+						stylesheets.className = 'ss-stylesheets';
+						return stylesheets;
+					},
+				},
+				component: (
+					<Fragment>
+						<link
+							rel="stylesheet"
+							type="text/css"
+							href="https://staticw2.yotpo.com/lpDUrFWGgBnDmHAXNokbHWipyv7iTcl49m8lePFi/widget.css?widget_version=2020-02-23_10-03-23"
+						/>
+						<link rel="stylesheet" type="text/css" href="https://netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" />
+						<link rel="stylesheet" type="text/css" href="https://cdn.searchspring.net/ajax_search/sites/ga9kq2/css/ga9kq2.css" />
+					</Fragment>
+				),
+			},
+		],
+		(target, elem) => {
+			render(target.component, elem);
+		}
+	);
+};
+
+addStylesheets();
 cntrlr.init();
 cntrlr.search();
+
+// for testing purposes
+window.sssnap = {
+	controllers: {
+		search: cntrlr,
+	},
+};
