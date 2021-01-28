@@ -1,3 +1,5 @@
+import { log } from '@searchspring/snap-toolbox/logger';
+
 // TODO - move to toolbox
 export async function until(thing, customOptions) {
 	const options = {
@@ -47,4 +49,21 @@ export async function until(thing, customOptions) {
 			}
 		}
 	});
+}
+
+export function heightMatch($) {
+	if (typeof $ != 'function') {
+		log.error('$ is not a function');
+		return;
+	}
+
+	let highestBox = 0;
+
+	$('.ss-item-container .product h4.card-title').each(() => {
+		if ($(this).height() > highestBox) {
+			highestBox = $(this).height();
+		}
+	});
+
+	$('.ss-item-container .product h4.card-title').height(highestBox);
 }

@@ -14,7 +14,9 @@ import config from '../package.json';
 import { middleware } from './scripts/custom';
 import './styles/custom.scss';
 
-import { Main } from './components/Main';
+import { SearchPage, BreadCrumbs } from './components/SearchPage';
+import { Sidebar } from './components/Sidebar';
+import { Content } from './components/Content';
 
 /*
 	configuration and instantiation
@@ -34,7 +36,7 @@ const cntrlrConfig = {
 	id: 'search',
 	settings: {
 		redirects: {
-			enabled: false,
+			enabled: true,
 		},
 	},
 };
@@ -42,7 +44,7 @@ const cntrlrConfig = {
 const cntrlr = (window.cntrlr = new SearchController(cntrlrConfig, {
 	client,
 	store: new SearchStore(),
-	urlManager: new UrlManager(new QueryStringTranslator(), ReactLinker),
+	urlManager: new UrlManager(new QueryStringTranslator({ queryParameter: 'search_query' }), ReactLinker),
 	eventManager: new EventManager(),
 	profiler: new Profiler(),
 }));
@@ -50,17 +52,44 @@ const cntrlr = (window.cntrlr = new SearchController(cntrlrConfig, {
 // custom codez
 cntrlr.use(middleware);
 
-// render <Content/> component into #searchspring-content
-cntrlr.on('init', async () => {
-	new DomTargeter(
+// render components into entry points
+cntrlr.on('init', async ({ controller }) => {
+	const sidebarTarget = new DomTargeter(
 		[
 			{
-				selector: '.searchspring-container',
-				component: <Main store={cntrlr.store} />,
+				selector: '#searchspring-sidebar',
+				component: <Sidebar store={controller.store} />,
 			},
 		],
 		(target, elem) => {
 			render(target.component, elem);
+		}
+	);
+
+	const contentTarget = new DomTargeter(
+		[
+			{
+				selector: '#searchspring-content',
+				component: <Content store={controller.store} />,
+			},
+		],
+		(target, elem) => {
+			render(target.component, elem);
+		}
+	);
+
+	const searchPageTarget = new DomTargeter(
+		[
+			{
+				selector: '.searchspring-container',
+				component: <SearchPage store={controller.store} />,
+			},
+		],
+		(target, elem) => {
+			render(target.component, elem);
+
+			const breadcrumbTarget = document.querySelector('.page--searchresults ul.breadcrumbs');
+			breadcrumbTarget && render(<BreadCrumbs />, breadcrumbTarget);
 		}
 	);
 });
@@ -97,9 +126,9 @@ const addStylesheets = () => {
 	);
 };
 
-addStylesheets();
-cntrlr.init();
 cntrlr.search();
+cntrlr.init();
+addStylesheets();
 
 // for testing purposes
 window.sssnap = {

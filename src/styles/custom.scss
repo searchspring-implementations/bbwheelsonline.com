@@ -1,3 +1,32 @@
-.searchspring-container {
+// styles taken from SMC -- AS IS
 
+.freelugnuts {
+	position: absolute;
+	bottom: 0px;
+}
+.freeitem {
+	position: absolute;
+	bottom: 0px;
+}
+.incartdiscount {
+	position: absolute;
+	bottom: 0px;
+}
+
+.ss-item-container .yotpo .yotpo-bottomline .yotpo-stars .yotpo-icon {
+	color: #ffc700;
+}
+
+@media (min-width: 576px) {
+	.col-sm-4 {
+		width: 33.33%;
+		float: left;
+	}
+}
+
+.ss-toolbar.ss-toolbar-bottom {
+	display: none;
+}
+.ss-results .ss-toolbar.ss-toolbar-bottom {
+	display: block;
 }

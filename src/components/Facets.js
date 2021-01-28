@@ -98,6 +98,9 @@ export class Facets extends Component {
 							</div>
 						))}
 					</div>
+
+					{/* TODO Left Banner */}
+					{/* <div ng-if="merchandising.content.left.length > 0" id="ss-merch-left" class="ss-merchandising" ss-merchandising="left"></div> */}
 				</div>
 			)
 		);
@@ -111,7 +114,7 @@ class FacetOptionsHierarchy extends Component {
 		const values = facet.refinedValues;
 
 		return (
-			<ul class="ss-hierarchy navList" ng-class="{'ss-show-overflow': facet.overflow.remaining != facet.overflow.count}">
+			<ul class={`ss-hierarchy navList ${facet.overflow.remaining && !facet.search.input ? '' : 'ss-show-overflow'}`}>
 				{values.map((value) => (
 					<li ng-repeat="value in facet.refinedValues" class={`ss-hierarchy-option navList-item`}>
 						{/* ng-class="{'ss-hierarchy-current': value.active, 'ss-hierarchy-return': value.history && !value.active}" */}
@@ -143,20 +146,14 @@ class FacetOptionsList extends Component {
 			<ul
 				id={`facetedSearch-navList--${facet.field}`}
 				data-facet={facet.field}
-				class={`navList ${facet.overflow.remaining ? '' : 'ss-show-overflow'}`}
+				class={`navList ${facet.overflow.remaining && !facet.search.input ? '' : 'ss-show-overflow'}`}
 			>
 				{values.map((value) => (
 					<li class="navList-item">
 						{ratingFacet ? (
 							<a {...value.url.link} class={`${value.filtered ? 'highlight' : ''}`}>
-								<span class="star-rating">
-									{/* <i ng-if="value.low == 5" ng-bind-html="value.star_html | trusted"></i>
-										<i ng-if="value.low == 4" ng-bind-html="value.star_html | trusted"></i>
-										<i ng-if="value.low == 3" ng-bind-html="value.star_html | trusted"></i>
-										<i ng-if="value.low == 2" ng-bind-html="value.star_html | trusted"></i>
-										<i ng-if="value.low == 1" ng-bind-html="value.star_html | trusted"></i> */}
-								</span>
-								{value.value != 5 && <span class="and-up">&amp; Up</span>}
+								<span class="star-rating">{value.custom?.ratingComponent}</span>
+								{value.low != 5 && <span class="and-up">&amp; Up</span>}
 								<span class="facet-count">({value.count})</span>
 							</a>
 						) : (

@@ -1,19 +1,27 @@
 import { h, Fragment, Component } from 'preact';
 import { observer } from 'mobx-react';
 
-import { withStore } from '../services/providers';
+import { StoreProvider, withStore } from '../services/providers';
+import { Profile } from './Profile';
 import { Facets } from './Facets';
 
 @observer
 export class Sidebar extends Component {
 	render() {
+		const store = this.props.store;
+		const profiler = store.controller.profiler;
+
 		return (
-			<div id="facetedSearch" class="ss-sidebar-container facetedSearch sidebarBlock">
-				{/* TODO prevent render in mobile ? ng-if="!slideout.triggered" */}
-				<FilterSummary />
-				<Facets />
-				<FilterMessages />
-			</div>
+			<StoreProvider store={store}>
+				<Profile name="Sidebar" profiler={profiler}>
+					<div id="facetedSearch" class="ss-sidebar-container facetedSearch sidebarBlock">
+						{/* TODO prevent render in mobile ? ng-if="!slideout.triggered" */}
+						<FilterSummary />
+						<Facets />
+						<FilterMessages />
+					</div>
+				</Profile>
+			</StoreProvider>
 		);
 	}
 }
@@ -64,7 +72,11 @@ export class FilterMessages extends Component {
 
 		let message = '';
 		if (pagination.totalResults === 0 && filters.length === 0) {
-			message = 'There are no results to refine. If you need additional help, please try our search "<strong>Suggestions</strong>".';
+			message = (
+				<span>
+					There are no results to refine. If you need additional help, please try our search "<strong>Suggestions</strong>".
+				</span>
+			);
 		} else if (pagination.totalResults === 0 && filters.length) {
 			message = 'If you are not seeing any results, try removing some of your selected filters.';
 		} else if (pagination.totalResults && filters.length === 0) {
