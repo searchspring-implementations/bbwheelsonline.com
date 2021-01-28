@@ -51,19 +51,40 @@ export async function until(thing, customOptions) {
 	});
 }
 
-export function heightMatch($) {
-	if (typeof $ != 'function') {
-		log.error('$ is not a function');
-		return;
-	}
+export const matchHeights = async () => {
+	// height match
+	const jQuery = await until(() => window.jQuery);
 
-	let highestBox = 0;
+	heightMatch('.ss-item-container .product h4.card-title', jQuery);
+	heightMatch('.ss-item-container .card__price-rating-wrapper', jQuery);
 
-	$('.ss-item-container .product h4.card-title').each(() => {
-		if ($(this).height() > highestBox) {
-			highestBox = $(this).height();
+	// wait until all images have loaded then re-match height
+	let deferreds = [];
+	jQuery('.ss-item-container .card-image').each(function () {
+		if (!this.complete) {
+			const deferred = jQuery.Deferred();
+			jQuery(this).one('load', deferred.resolve);
+			deferreds.push(deferred);
 		}
 	});
 
-	$('.ss-item-container .product h4.card-title').height(highestBox);
-}
+	jQuery.when.apply(jQuery, deferreds).done(function () {
+		// after all promises resolve (all images have loaded or errored out)
+		heightMatch('.ss-item-container .card-img-container', jQuery);
+	});
+};
+
+export const heightMatch = async (selector, jQuery) => {
+	let highestBox = 0;
+	const elements = jQuery(selector);
+
+	elements.each(function () {
+		if (jQuery(this).height() > highestBox) {
+			highestBox = jQuery(this).height();
+		}
+	});
+
+	elements.height(highestBox);
+};
+
+window.matchHeights = matchHeights;

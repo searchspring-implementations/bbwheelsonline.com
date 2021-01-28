@@ -6,41 +6,17 @@ import { Profile } from './Profile';
 import { Toolbar } from './Toolbar';
 import { Pagination } from './Pagination';
 import { Result } from './Result';
-import { heightMatch, until } from '../scripts/functions';
-
-const matchHeight = () => {
-	// height match
-	(async () => {
-		const jQuery = await until(window.jQuery);
-
-		heightMatch(jQuery);
-
-		// wait until all images have loaded then re-match height
-		let deferreds = [];
-		jQuery('.ss-item-container .card-image').each(function () {
-			if (!this.complete) {
-				const deferred = jQuery.Deferred();
-				jQuery(this).one('load', deferred.resolve);
-				deferreds.push(deferred);
-			}
-		});
-
-		jQuery.when.apply(jQuery, deferreds).done(function () {
-			// after all promises resolve (all images have loaded or errored out)
-			heightMatch(jQuery);
-		});
-	})();
-};
+import { matchHeights, until } from '../scripts/functions';
 
 @withStore
 @observer
 export class Results extends Component {
 	componentDidMount() {
-		// matchHeight();
+		matchHeights();
 	}
 
 	componentDidUpdate() {
-		// matchHeight();
+		matchHeights();
 	}
 
 	render() {

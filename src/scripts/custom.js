@@ -2,13 +2,17 @@ import { h, Fragment } from 'preact';
 
 import { log, colors, emoji } from '@searchspring/snap-toolbox/logger';
 
-async function scrollToTop(search, next) {
-	window.scroll({ top: 0, left: 0, behavior: 'smooth' });
+async function scrollToTop({ controller }, next) {
+	// keep the same position when a user clicks on a facet
+	if (controller.store.pagination.page != 1) {
+		window.scroll({ top: 0, left: 0, behavior: 'smooth' });
+	}
+
 	await next();
 }
 
 export const middleware = (controller) => {
-	controller.on('init', async ({ controller }, next) => {
+	controller.on('init', ({ controller }, next) => {
 		const versionText = 'SNAPreact 0.2.1 - bbwheelsonline.com';
 
 		log.imageText({
@@ -17,7 +21,7 @@ export const middleware = (controller) => {
 			style: `color: ${colors.indigo}; font-weight: bold;`,
 		});
 
-		await next();
+		next();
 	});
 
 	// scroll to top
@@ -332,22 +336,6 @@ this.on('afterBootstrap', function($scope) {
     	}
     	finder.findIt();
     }
-});
-
-// Disable Facet Scroll
-// Keep the same position when a user clicks on a facet
-var shallWeScroll;
-
-this.on('afterSearch', function($scope) {
-	if ($scope.pagination.currentPage == 1) {
-		shallWeScroll = false;
-	} else {
-		shallWeScroll = true;
-	}
-});
-
-this.on('_beforeAutoScroll', function() {
-	return shallWeScroll;
 });
 
 */
