@@ -87,4 +87,16 @@ export const heightMatch = async (selector, jQuery) => {
 	elements.height(highestBox);
 };
 
-window.matchHeights = matchHeights;
+export const getV3ScriptAttrs = () => {
+	const scriptElement = document.querySelector('script[src*="searchspring.catalog.js"]');
+
+	if (scriptElement) {
+		const attributes = {};
+
+		scriptElement.attributes.forEach((attribute) => {
+			attributes[attribute.name] = attribute.value;
+		});
+
+		return attributes;
+	}
+};
