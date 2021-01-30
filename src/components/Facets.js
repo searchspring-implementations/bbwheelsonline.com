@@ -64,7 +64,7 @@ export class Facet extends Component {
 										ng-if="facet.facet_active"
 										onClick={(e) => {
 											e.stopPropagation();
-											// facet.clear();
+											facet.clear.url.go();
 										}}
 										class="facetedSearch-clearLink"
 									>

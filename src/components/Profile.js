@@ -13,7 +13,7 @@ export class Profile extends Component {
 		this.context = props.context;
 		this.profile = this.createProfile();
 
-		logComponent.creation({ name: this.name });
+		// logComponent.creation({ name: this.name });
 	}
 
 	componentDidUpdate() {

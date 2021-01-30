@@ -12,6 +12,7 @@ import { DomTargeter } from '@searchspring/snap-toolbox';
 /* local imports */
 import config from '../package.json';
 import { middleware } from './scripts/custom';
+import { getV3ScriptAttrs } from './scripts/functions';
 import './styles/custom.scss';
 
 import { SearchPage, BreadCrumbs } from './components/SearchPage';
@@ -24,7 +25,29 @@ import { Content } from './components/Content';
 
 let globals = {
 	siteId: config.searchspring.siteId,
+	filters: [],
 };
+
+// category bgFilter
+const v3Context = getV3ScriptAttrs();
+if (v3Context.category) {
+	globals.filters.push({
+		type: 'value',
+		field: 'categories_hierarchy',
+		value: v3Context.category,
+		background: true,
+	});
+}
+
+// brand bgFilter
+if (v3Context.brand) {
+	globals.filters.push({
+		type: 'value',
+		field: 'brand',
+		value: v3Context.brand,
+		background: true,
+	});
+}
 
 const client = new SnapClient(globals);
 
@@ -62,6 +85,7 @@ cntrlr.on('init', async ({ controller }) => {
 			},
 		],
 		(target, elem) => {
+			while (elem.firstChild) elem.removeChild(elem.firstChild);
 			render(target.component, elem);
 		}
 	);
@@ -74,6 +98,7 @@ cntrlr.on('init', async ({ controller }) => {
 			},
 		],
 		(target, elem) => {
+			while (elem.firstChild) elem.removeChild(elem.firstChild);
 			render(target.component, elem);
 		}
 	);
