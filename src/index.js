@@ -2,8 +2,10 @@ import { h, Fragment, render } from 'preact';
 
 /* searchspring imports */
 import { SearchController } from '@searchspring/snap-controller-search';
+import { AutocompleteController } from '@searchspring/snap-controller-autocomplete';
 import SnapClient from '@searchspring/snap-client-javascript';
 import { SearchStore } from '@searchspring/snap-store-mobx-search';
+import { AutocompleteStore } from '@searchspring/snap-store-mobx-autocomplete';
 import { UrlManager, QueryStringTranslator, ReactLinker } from '@searchspring/snap-url-manager';
 import { EventManager } from '@searchspring/snap-event-manager';
 import { Profiler } from '@searchspring/snap-profiler';
@@ -18,10 +20,15 @@ import './styles/custom.scss';
 import { SearchPage, BreadCrumbs } from './components/SearchPage';
 import { Sidebar } from './components/Sidebar';
 import { Content } from './components/Content';
+import { Autocomplete } from './components/Autocomplete';
 
 /*
 	configuration and instantiation
  */
+
+const clientConfig = {
+	apiHost: 'http://localhost:8080/api/v1',
+};
 
 let globals = {
 	siteId: config.searchspring.siteId,
@@ -49,7 +56,7 @@ if (v3Context.brand) {
 	});
 }
 
-const client = new SnapClient(globals);
+const client = new SnapClient(globals, clientConfig);
 
 /*
 	search
@@ -155,9 +162,81 @@ cntrlr.search();
 cntrlr.init();
 addStylesheets();
 
+/*
+	autocomplete
+ */
+
+const accntrlrConfig = {
+	id: 'autocomplete',
+	selector: '#search_query',
+	globals: {
+		suggestions: {
+			count: 4,
+		},
+		search: {
+			query: {
+				spellCorrection: true,
+			},
+		},
+		pagination: {
+			pageSize: 6,
+		},
+	},
+};
+
+const accntrlr = (window.accntrlr = new AutocompleteController(accntrlrConfig, {
+	client,
+	store: new AutocompleteStore(),
+	urlManager: new UrlManager(new QueryStringTranslator({ queryParameter: 'search_query' }), ReactLinker),
+	eventManager: new EventManager(),
+	profiler: new Profiler(),
+}));
+
+accntrlr.on('focusChange', ({ controller }) => {
+	if (controller.store.state.focusedInput) {
+		document.querySelectorAll('html, body').forEach((elem) => {
+			elem.classList.add('ss-ac-open');
+		});
+	} else {
+		document.querySelectorAll('html, body').forEach((elem) => {
+			elem.classList.remove('ss-ac-open');
+		});
+	}
+});
+
+accntrlr.on('init', async ({ controller }) => {
+	new DomTargeter(
+		[
+			{
+				selector: controller.config.selector,
+				component: Autocomplete,
+				inject: {
+					action: 'after', // before, after, append, prepend
+					element: (target, origElement) => {
+						const acContainer = document.createElement('div');
+						acContainer.id = 'ss-ac-target';
+						acContainer.addEventListener('click', (e) => {
+							e.stopPropagation();
+						});
+						return acContainer;
+					},
+				},
+			},
+		],
+		(target, injectedElem, inputElem) => {
+			const acComponent = <target.component store={controller.store} input={inputElem} />;
+			render(acComponent, injectedElem);
+		}
+	);
+});
+
+accntrlr.init();
+accntrlr.bind();
+
 // for testing purposes
 window.sssnap = {
 	controllers: {
 		search: cntrlr,
+		autocomplete: accntrlr,
 	},
 };

@@ -59,19 +59,19 @@ export const matchHeights = async () => {
 	heightMatch('.ss-item-container .card__price-rating-wrapper', jQuery);
 
 	// wait until all images have loaded then re-match height
-	let deferreds = [];
-	jQuery('.ss-item-container .card-image').each(function () {
-		if (!this.complete) {
-			const deferred = jQuery.Deferred();
-			jQuery(this).one('load', deferred.resolve);
-			deferreds.push(deferred);
-		}
-	});
+	// let deferreds = [];
+	// jQuery('.ss-item-container .card-image').each(function () {
+	// 	if (!this.complete) {
+	// 		const deferred = jQuery.Deferred();
+	// 		jQuery(this).one('load', deferred.resolve);
+	// 		deferreds.push(deferred);
+	// 	}
+	// });
 
-	jQuery.when.apply(jQuery, deferreds).done(function () {
-		// after all promises resolve (all images have loaded or errored out)
-		heightMatch('.ss-item-container .card-img-container', jQuery);
-	});
+	// jQuery.when.apply(jQuery, deferreds).done(function () {
+	// 	// after all promises resolve (all images have loaded or errored out)
+	// 	heightMatch('.ss-item-container .card-img-container', jQuery);
+	// });
 };
 
 export const heightMatch = async (selector, jQuery) => {
