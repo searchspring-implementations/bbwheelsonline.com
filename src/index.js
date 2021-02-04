@@ -1,19 +1,25 @@
 import { h, Fragment, render } from 'preact';
 
 /* searchspring imports */
-import { SearchController } from '@searchspring/snap-controller-search';
-import { AutocompleteController } from '@searchspring/snap-controller-autocomplete';
 import SnapClient from '@searchspring/snap-client-javascript';
-import { SearchStore } from '@searchspring/snap-store-mobx-search';
-import { AutocompleteStore } from '@searchspring/snap-store-mobx-autocomplete';
+
 import { UrlManager, QueryStringTranslator, ReactLinker } from '@searchspring/snap-url-manager';
 import { EventManager } from '@searchspring/snap-event-manager';
 import { Profiler } from '@searchspring/snap-profiler';
 import { DomTargeter } from '@searchspring/snap-toolbox';
 
+import { SearchController } from '@searchspring/snap-controller-search';
+import { AutocompleteController } from '@searchspring/snap-controller-autocomplete';
+import { FinderController } from '@searchspring/snap-controller-finder';
+
+import { SearchStore } from '@searchspring/snap-store-mobx-search';
+import { AutocompleteStore } from '@searchspring/snap-store-mobx-autocomplete';
+import { FinderStore } from '@searchspring/snap-store-mobx-finder';
+
 /* local imports */
 import config from '../package.json';
 import { middleware } from './scripts/custom';
+import { finderware } from './scripts/finders';
 import { getV3ScriptAttrs } from './scripts/functions';
 import './styles/custom.scss';
 
@@ -27,18 +33,35 @@ import { Autocomplete } from './components/Autocomplete';
  */
 
 const clientConfig = {
-	apiHost: 'http://localhost:8080/api/v1',
+	// apiHost: 'http://localhost:8080/api/v1',
 };
 
 let globals = {
 	siteId: config.searchspring.siteId,
-	filters: [],
+};
+
+const client = new SnapClient(globals, clientConfig);
+
+/*
+	search
+ */
+
+const searchConfig = {
+	id: 'search',
+	globals: {
+		filters: [],
+	},
+	settings: {
+		redirects: {
+			enabled: true,
+		},
+	},
 };
 
 // category bgFilter
 const v3Context = getV3ScriptAttrs();
 if (v3Context.category) {
-	globals.filters.push({
+	searchConfig.globals.filters.push({
 		type: 'value',
 		field: 'categories_hierarchy',
 		value: v3Context.category,
@@ -48,7 +71,7 @@ if (v3Context.category) {
 
 // brand bgFilter
 if (v3Context.brand) {
-	globals.filters.push({
+	searchConfig.globals.filters.push({
 		type: 'value',
 		field: 'brand',
 		value: v3Context.brand,
@@ -56,34 +79,19 @@ if (v3Context.brand) {
 	});
 }
 
-const client = new SnapClient(globals, clientConfig);
-
-/*
-	search
- */
-
-const cntrlrConfig = {
-	id: 'search',
-	settings: {
-		redirects: {
-			enabled: true,
-		},
-	},
-};
-
-const cntrlr = (window.cntrlr = new SearchController(cntrlrConfig, {
+const search = new SearchController(searchConfig, {
 	client,
 	store: new SearchStore(),
 	urlManager: new UrlManager(new QueryStringTranslator({ queryParameter: 'search_query' }), ReactLinker),
 	eventManager: new EventManager(),
 	profiler: new Profiler(),
-}));
+});
 
 // custom codez
-cntrlr.use(middleware);
+search.use(middleware);
 
 // render components into entry points
-cntrlr.on('init', async ({ controller }) => {
+search.on('init', async ({ controller }) => {
 	const sidebarTarget = new DomTargeter(
 		[
 			{
@@ -92,6 +100,10 @@ cntrlr.on('init', async ({ controller }) => {
 			},
 		],
 		(target, elem) => {
+			// run search after finding target
+			controller.search();
+
+			// empty element
 			while (elem.firstChild) elem.removeChild(elem.firstChild);
 			render(target.component, elem);
 		}
@@ -105,6 +117,7 @@ cntrlr.on('init', async ({ controller }) => {
 			},
 		],
 		(target, elem) => {
+			// empty element
 			while (elem.firstChild) elem.removeChild(elem.firstChild);
 			render(target.component, elem);
 		}
@@ -118,6 +131,9 @@ cntrlr.on('init', async ({ controller }) => {
 			},
 		],
 		(target, elem) => {
+			// run search after finding target
+			controller.search();
+
 			render(target.component, elem);
 
 			const breadcrumbTarget = document.querySelector('.page--searchresults ul.breadcrumbs');
@@ -158,15 +174,14 @@ const addStylesheets = () => {
 	);
 };
 
-cntrlr.search();
-cntrlr.init();
+search.init();
 addStylesheets();
 
 /*
 	autocomplete
  */
 
-const accntrlrConfig = {
+const acsearchConfig = {
 	id: 'autocomplete',
 	selector: '#search_query',
 	globals: {
@@ -184,15 +199,15 @@ const accntrlrConfig = {
 	},
 };
 
-const accntrlr = (window.accntrlr = new AutocompleteController(accntrlrConfig, {
+const acsearch = new AutocompleteController(acsearchConfig, {
 	client,
 	store: new AutocompleteStore(),
 	urlManager: new UrlManager(new QueryStringTranslator({ queryParameter: 'search_query' }), ReactLinker),
 	eventManager: new EventManager(),
 	profiler: new Profiler(),
-}));
+});
 
-accntrlr.on('focusChange', ({ controller }) => {
+acsearch.on('focusChange', ({ controller }) => {
 	if (controller.store.state.focusedInput) {
 		document.querySelectorAll('html, body').forEach((elem) => {
 			elem.classList.add('ss-ac-open');
@@ -204,7 +219,7 @@ accntrlr.on('focusChange', ({ controller }) => {
 	}
 });
 
-accntrlr.on('init', async ({ controller }) => {
+acsearch.on('init', async ({ controller }) => {
 	new DomTargeter(
 		[
 			{
@@ -224,19 +239,93 @@ accntrlr.on('init', async ({ controller }) => {
 			},
 		],
 		(target, injectedElem, inputElem) => {
+			// bind to config selector
+			controller.bind();
+
 			const acComponent = <target.component store={controller.store} input={inputElem} />;
 			render(acComponent, injectedElem);
 		}
 	);
 });
 
-accntrlr.init();
-accntrlr.bind();
+acsearch.init();
+
+/*
+	finder
+ */
+
+// TODO url: '/search?action=finder',
+const searchURL = '/search';
+const finderInstances = {};
+const finderConfigs = [
+	{
+		id: 'tiresByVehicle',
+		url: searchURL,
+		selector: '.searchspring-finder_tires_by_vehicle',
+		type: 'ymm',
+		fields: [
+			{
+				field: 'ss_tire',
+				levels: ['Year', 'Make', 'Model', 'Wheel Size'],
+			},
+		],
+	},
+	{
+		id: 'tiresBySize',
+		url: searchURL,
+		selector: '.searchspring-finder_tires_by_size',
+		fields: [{ field: 'custom_tire_size_1' }, { field: 'custom_tire_size_2' }, { field: 'custom_wheel_size' }],
+	},
+	{
+		id: 'wheelsByVehicle',
+		url: searchURL,
+		selector: '.searchspring-finder_wheels_by_vehicle',
+		type: 'ymm',
+		fields: [
+			{
+				field: 'ss_vehicle',
+				levels: ['Year', 'Make', 'Model'],
+			},
+		],
+	},
+	{
+		id: 'wheelsBySize',
+		url: searchURL,
+		selector: '.searchspring-finder_wheels_by_size',
+		fields: [{ field: 'custom_wheel_size' }, { field: 'custom_wheel_width' }, { field: 'custom_wheel_bolt_pattern' }, { field: 'custom_color' }],
+	},
+	{
+		id: 'accessoriesFinder',
+		url: searchURL,
+		selector: '.searchspring-finder_accessories',
+		type: 'ymm',
+		fields: [
+			{
+				field: 'ss_accessory',
+				levels: ['Type', 'Year', 'Make', 'Model'],
+			},
+		],
+	},
+];
+
+finderConfigs.forEach((finderConfig) => {
+	const finderInstance = new FinderController(finderConfig, {
+		client,
+		store: new FinderStore(),
+		urlManager: new UrlManager(new QueryStringTranslator(), ReactLinker),
+		eventManager: new EventManager(),
+		profiler: new Profiler(),
+	});
+
+	finderInstance.use(finderware);
+	finderInstances[finderConfig.id] = finderInstance;
+});
 
 // for testing purposes
 window.sssnap = {
 	controllers: {
-		search: cntrlr,
-		autocomplete: accntrlr,
+		search: search,
+		autocomplete: acsearch,
+		finders: finderInstances,
 	},
 };
