@@ -33,7 +33,7 @@ import { Autocomplete } from './components/Autocomplete';
  */
 
 const clientConfig = {
-	// apiHost: 'http://localhost:8080/api/v1',
+	apiHost: 'http://localhost:8080/api/v1',
 };
 
 let globals = {
@@ -60,7 +60,7 @@ const searchConfig = {
 
 // category bgFilter
 const v3Context = getV3ScriptAttrs();
-if (v3Context.category) {
+if (v3Context?.category) {
 	searchConfig.globals.filters.push({
 		type: 'value',
 		field: 'categories_hierarchy',
@@ -70,7 +70,7 @@ if (v3Context.category) {
 }
 
 // brand bgFilter
-if (v3Context.brand) {
+if (v3Context?.brand) {
 	searchConfig.globals.filters.push({
 		type: 'value',
 		field: 'brand',
@@ -262,7 +262,9 @@ const finderConfigs = [
 		id: 'tiresByVehicle',
 		url: searchURL,
 		selector: '.searchspring-finder_tires_by_vehicle',
+		wrapSelect: true,
 		type: 'ymm',
+		className: 'ss-vehicle-finder',
 		fields: [
 			{
 				field: 'ss_tire',
@@ -274,13 +276,16 @@ const finderConfigs = [
 		id: 'tiresBySize',
 		url: searchURL,
 		selector: '.searchspring-finder_tires_by_size',
+		wrapSelect: false,
 		fields: [{ field: 'custom_tire_size_1' }, { field: 'custom_tire_size_2' }, { field: 'custom_wheel_size' }],
 	},
 	{
 		id: 'wheelsByVehicle',
 		url: searchURL,
 		selector: '.searchspring-finder_wheels_by_vehicle',
+		wrapSelect: true,
 		type: 'ymm',
+		className: 'ss-vehicle-finder',
 		fields: [
 			{
 				field: 'ss_vehicle',
@@ -292,13 +297,16 @@ const finderConfigs = [
 		id: 'wheelsBySize',
 		url: searchURL,
 		selector: '.searchspring-finder_wheels_by_size',
+		wrapSelect: false,
 		fields: [{ field: 'custom_wheel_size' }, { field: 'custom_wheel_width' }, { field: 'custom_wheel_bolt_pattern' }, { field: 'custom_color' }],
 	},
 	{
 		id: 'accessoriesFinder',
 		url: searchURL,
 		selector: '.searchspring-finder_accessories',
+		wrapSelect: true,
 		type: 'ymm',
+		className: 'ss-vehicle-finder',
 		fields: [
 			{
 				field: 'ss_accessory',
