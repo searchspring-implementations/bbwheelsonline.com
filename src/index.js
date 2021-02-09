@@ -33,7 +33,7 @@ import { Autocomplete } from './components/Autocomplete';
  */
 
 const clientConfig = {
-	apiHost: 'http://localhost:8080/api/v1',
+	// apiHost: 'http://localhost:8080/api/v1',
 };
 
 let globals = {
