@@ -1,9 +1,13 @@
 import { h, Fragment, Component } from 'preact';
 import { observer } from 'mobx-react';
 
+import { Slideout, useMediaQuery } from '@searchspring/snap-preact-components';
+
 import { StoreProvider, withStore } from '../services/providers';
 import { Profile } from './Profile';
 import { Results, NoResults } from './Results';
+import { FilterSummary } from './Sidebar';
+import { Facets } from '../components/Facets';
 
 @observer
 export class Content extends Component {
@@ -12,6 +16,7 @@ export class Content extends Component {
 		const profiler = store.controller.profiler;
 		const pagination = store.pagination;
 		const search = store.search;
+		const isMobile = useMediaQuery('(max-width: 800px)');
 
 		return (
 			<StoreProvider store={store}>
@@ -41,8 +46,18 @@ export class Content extends Component {
 					</div>
 
 					<div class="ss-filter-container">
-						{/* TODO Slideout */}
-						{/* <div ng-if="slideout.triggered" class="ss-slideout-toolbar"></div> */}
+						{isMobile && (
+							<div class="ss-slideout-toolbar">
+								<FilterSummary />
+
+								<Slideout
+									displayAt={'screen and (max-width: 800px)'}
+									buttonContent={store.facets.length && store.pagination.totalResults && <SlideoutButton />}
+								>
+									<SlideoutContent />
+								</Slideout>
+							</div>
+						)}
 					</div>
 
 					{pagination.totalResults ? <Results /> : pagination.totalResults === 0 && <NoResults />}
@@ -52,6 +67,40 @@ export class Content extends Component {
 	}
 }
 
+const SlideoutButton = () => {
+	return (
+		<div class="ss-slideout-button">
+			<span class="ss-slideout-button-icon"></span>
+			<span class="ss-slideout-button-label">Filter Options</span>
+		</div>
+	);
+};
+
+const SlideoutContent = (props) => {
+	const { toggleActive, active } = props;
+
+	return (
+		active && (
+			<Fragment>
+				<div ng-if="facets.length > 0" class="ss-slideout-header">
+					<h4 class="ss-title">Filter Options</h4>
+					<a
+						onClick={() => {
+							toggleActive();
+						}}
+						class="ss-close"
+					></a>
+				</div>
+
+				<div class="ss-slideout-facets">
+					<div class="ss-facets">
+						<Facets></Facets>
+					</div>
+				</div>
+			</Fragment>
+		)
+	);
+};
 @withStore
 @observer
 export class Pagination extends Component {

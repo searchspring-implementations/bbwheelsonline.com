@@ -18,7 +18,7 @@ export class Pagination extends Component {
 				<div class="pagination">
 					<ul class="pagination-list">
 						{pagination.previous && (
-							<li key={'pagination.previoius'} class="pagination-item pagination-item--previous">
+							<li class="pagination-item pagination-item--previous">
 								<a {...pagination.previous.url.link} class="pagination-link">
 									<i class="icon" aria-hidden="true">
 										<svg>
@@ -30,7 +30,7 @@ export class Pagination extends Component {
 						)}
 
 						{pages.map((page) => (
-							<li key={`pagination-${page.number}`} class={`pagination-item ${page.active ? 'pagination-item--current' : ''}`}>
+							<li key={page.key} class={`pagination-item ${page.active ? 'pagination-item--current' : ''}`}>
 								<a {...page.url.link} class="pagination-link">
 									{page.number}
 								</a>
@@ -38,7 +38,7 @@ export class Pagination extends Component {
 						))}
 
 						{pagination.next && (
-							<li key={'pagination.next'} ng-if="pagination.next" class="ss-next pagination-item pagination-item--next">
+							<li class="ss-next pagination-item pagination-item--next">
 								<a {...pagination.next.url.link} class="pagination-link">
 									<i class="icon" aria-hidden="true">
 										<svg>

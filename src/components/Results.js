@@ -38,7 +38,7 @@ export class Results extends Component {
 					<ul class="ss-item-container ss-item-container-grid productGrid">
 						{results.map((result) => (
 							<li class="product">
-								<Result result={result} />
+								<Result key={result.id} result={result} />
 							</li>
 						))}
 					</ul>

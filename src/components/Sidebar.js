@@ -1,27 +1,32 @@
 import { h, Fragment, Component } from 'preact';
 import { observer } from 'mobx-react';
 
+import { useMediaQuery } from '@searchspring/snap-preact-components';
+
 import { StoreProvider, withStore } from '../services/providers';
 import { Profile } from './Profile';
-import { Facets } from './Facets';
+import { DesktopFacets } from './Facets';
 
 @observer
 export class Sidebar extends Component {
 	render() {
 		const store = this.props.store;
 		const profiler = store.controller.profiler;
+		const isDesktop = useMediaQuery('(min-width: 801px)');
 
 		return (
-			<StoreProvider store={store}>
-				<Profile name="Sidebar" profiler={profiler}>
-					<div id="facetedSearch" class="ss-sidebar-container facetedSearch sidebarBlock">
-						{/* TODO prevent render in mobile ? ng-if="!slideout.triggered" */}
-						<FilterSummary />
-						<Facets />
-						<FilterMessages />
-					</div>
-				</Profile>
-			</StoreProvider>
+			isDesktop && (
+				<StoreProvider store={store}>
+					<Profile name="Sidebar" profiler={profiler}>
+						<div id="facetedSearch" class="ss-sidebar-container facetedSearch sidebarBlock">
+							{/* TODO prevent render in mobile ? ng-if="!slideout.triggered" */}
+							<FilterSummary />
+							<DesktopFacets />
+							<FilterMessages />
+						</div>
+					</Profile>
+				</StoreProvider>
+			)
 		);
 	}
 }

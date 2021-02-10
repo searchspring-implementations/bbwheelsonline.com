@@ -4,6 +4,36 @@ import { observer } from 'mobx-react';
 import { Profile } from './Profile';
 import { withStore } from '../services/providers';
 
+import { Slider } from '@searchspring/snap-preact-components';
+
+const sliderProps = {
+	trackColor: '#d01f27',
+	railColor: '#d01f27',
+	handleColor: '#d01f27',
+	handleDraggingColor: '#d01f27',
+};
+
+@withStore
+@observer
+export class DesktopFacets extends Component {
+	render() {
+		const { facets } = this.props.store;
+		const profiler = this.props.store.controller.profiler;
+
+		return (
+			facets.length !== 0 && (
+				<Profile name="Facets" profiler={profiler}>
+					<div id="facetedSearch-navList" class="ss-facets facetedSearch-navList blocker-container">
+						<Facets />
+						{/* TODO Left Banner */}
+						{/* <div ng-if="merchandising.content.left.length > 0" id="ss-merch-left" class="ss-merchandising" ss-merchandising="left"></div> */}
+					</div>
+				</Profile>
+			)
+		);
+	}
+}
+
 @withStore
 @observer
 export class Facets extends Component {
@@ -13,18 +43,11 @@ export class Facets extends Component {
 
 		return (
 			facets.length !== 0 && (
-				<Profile name="Facets" profiler={profiler}>
-					<div id="facetedSearch-navList" class="ss-facets facetedSearch-navList blocker-container">
-						<div class="accordion accordion--navList">
-							{facets.map((facet) => (
-								<Facet facet={facet} />
-							))}
-						</div>
-
-						{/* TODO Left Banner */}
-						{/* <div ng-if="merchandising.content.left.length > 0" id="ss-merch-left" class="ss-merchandising" ss-merchandising="left"></div> */}
-					</div>
-				</Profile>
+				<div class="accordion accordion--navList">
+					{facets.map((facet) => (
+						<Facet facet={facet} />
+					))}
+				</div>
 			)
 		);
 	}
@@ -100,7 +123,7 @@ export class Facet extends Component {
 											case 'hierarchy':
 												return <FacetOptionsHierarchy facet={facet} />;
 											case 'slider':
-												return <FacetSlider facet={facet} />;
+												return <Slider facet={facet} {...sliderProps} />;
 											case 'list':
 											default:
 												return <FacetOptionsList facet={facet} />;

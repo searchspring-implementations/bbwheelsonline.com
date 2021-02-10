@@ -18,7 +18,7 @@ export class Result extends Component {
 		const imageUrl = core.thumbnailImageUrl ? core.thumbnailImageUrl : fallbackImageUrl;
 
 		return (
-			<article key={result.id} class="card">
+			<article class="card">
 				<figure class="card-figure">
 					<a href={result.url}>
 						<div class="card-img-container">
