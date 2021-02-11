@@ -30,15 +30,16 @@ jobs:
         env:
             NODE_AUTH_TOKEN: ${{ secrets.PACKAGE_TOKEN }}
       - run: npm run build
-      - name: Extract branch name
+      - name: Extract Variables
+        id: variables
         shell: bash
-        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
-        id: extract_branch
-      - name: Get Package Variables
-        id: package_variables
         run: |
-          JSON=$(cat ./package.json)
-          echo $JSON
+          branch=`echo ${GITHUB_REF#refs/heads/}`
+          echo "::set-output name=branch::$branch"
+          echo "Using branch: $branch"
+          siteId=`jq -r '.searchspring.siteId' < package.json`
+          echo "::set-output name=siteId::$siteId"
+          echo "Using siteId: $siteId"
       - name: Configure AWS credentials from Production account
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -47,4 +48,4 @@ jobs:
           aws-region: us-east-2
       - name: Copy files to s3
         run: |
-          aws s3 sync --delete --acl public-read dist s3://${{secrets.SNAPFU_AWS_BUCKET}}/${{fromJson(steps.package_variables.outputs.packageJson).searchspring.siteId}}/${{ steps.extract_branch.outputs.branch }}
+          aws s3 sync --delete --acl public-read dist s3://${{secrets.SNAPFU_AWS_BUCKET}}/${{ steps.variables.outputs.siteId }}/${{ steps.variables.outputs.branch }}
