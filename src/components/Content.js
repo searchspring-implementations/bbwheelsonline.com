@@ -2,11 +2,12 @@ import { h, Fragment, Component } from 'preact';
 import { observer } from 'mobx-react';
 
 import { Slideout, useMediaQuery } from '@searchspring/snap-preact-components';
+import { Banner } from '@searchspring/snap-preact-components';
 
 import { StoreProvider, withStore } from '../services/providers';
 import { Profile } from './Profile';
 import { Results, NoResults } from './Results';
-import { FilterSummary } from './Sidebar';
+import { FilterSummary } from './FilterSummary';
 import { Facets } from '../components/Facets';
 
 @observer
@@ -37,12 +38,11 @@ export class Content extends Component {
 							</span>
 						</h2>
 
+						{/* TODO original query (oq) */}
 						{/* <div ng-if="originalQuery" class="ss-oq">
 							Search instead for "<a class="ss-oq-link" href="{{ originalQuery.url }}">{{ originalQuery.value }}</a>"
 						</div> */}
-
-						{/* TODO Header Banner */}
-						{/* <div ng-if="merchandising.content.header.length > 0" id="ss-merch-header" class="ss-merchandising" ss-merchandising="header"></div> */}
+						<Banner content={store.merchandising.content} type="header" />
 					</div>
 
 					<div class="ss-filter-container">

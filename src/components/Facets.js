@@ -4,11 +4,11 @@ import { observer } from 'mobx-react';
 import { Profile } from './Profile';
 import { withStore } from '../services/providers';
 
-import { Slider } from '@searchspring/snap-preact-components';
+import { Slider, Banner } from '@searchspring/snap-preact-components';
 
 const sliderProps = {
 	trackColor: '#d01f27',
-	railColor: '#d01f27',
+	railColor: '#ccc',
 	handleColor: '#d01f27',
 	handleDraggingColor: '#d01f27',
 };
@@ -25,8 +25,6 @@ export class DesktopFacets extends Component {
 				<Profile name="Facets" profiler={profiler}>
 					<div id="facetedSearch-navList" class="ss-facets facetedSearch-navList blocker-container">
 						<Facets />
-						{/* TODO Left Banner */}
-						{/* <div ng-if="merchandising.content.left.length > 0" id="ss-merch-left" class="ss-merchandising" ss-merchandising="left"></div> */}
 					</div>
 				</Profile>
 			)
@@ -38,16 +36,20 @@ export class DesktopFacets extends Component {
 @observer
 export class Facets extends Component {
 	render() {
-		const { facets } = this.props.store;
+		const { facets, merchandising } = this.props.store;
 		const profiler = this.props.store.controller.profiler;
 
 		return (
 			facets.length !== 0 && (
-				<div class="accordion accordion--navList">
-					{facets.map((facet) => (
-						<Facet facet={facet} />
-					))}
-				</div>
+				<Fragment>
+					<div class="accordion accordion--navList">
+						{facets.map((facet) => (
+							<Facet facet={facet} />
+						))}
+					</div>
+
+					<Banner content={merchandising.content} type="left" />
+				</Fragment>
 			)
 		);
 	}
@@ -94,6 +96,7 @@ export class Facet extends Component {
 										Clear
 									</a>
 								)}
+								&nbsp;
 								<svg class="icon accordion-indicator toggleLink-text toggleLink-text--off">
 									<use xlinkHref="#icon-add" />
 								</svg>
@@ -160,16 +163,17 @@ class FacetOptionsHierarchy extends Component {
 		return (
 			<ul class={`ss-hierarchy navList ${facet.overflow.remaining && !facet.search.input ? '' : 'ss-show-overflow'}`}>
 				{values.map((value) => (
-					<li ng-repeat="value in facet.refinedValues" class={`ss-hierarchy-option navList-item`}>
-						{/* ng-class="{'ss-hierarchy-current': value.active, 'ss-hierarchy-return': value.history && !value.active}" */}
+					<li
+						class={`ss-hierarchy-option navList-item ${value.filtered && 'ss-hierarchy-current'} ${
+							value.history && !value.active && 'ss-hierarchy-return'
+						}`}
+					>
 						{value.filtered ? (
 							<span>{value.label}</span>
 						) : (
 							<a {...value.url.link} class="ss-hierarchy-link navList-action">
-								{value.label}{' '}
-								<span ng-if="!value.history" class="ss-facet-count">
-									({value.count})
-								</span>
+								{' ' + value.label}
+								{!value.history && <span class="ss-facet-count">({value.count})</span>}
 							</a>
 						)}
 					</li>
@@ -219,14 +223,5 @@ class FacetOptionsList extends Component {
 				))}
 			</ul>
 		);
-	}
-}
-
-@observer
-class FacetSlider extends Component {
-	render() {
-		const facet = this.props.facet;
-
-		return <div></div>;
 	}
 }

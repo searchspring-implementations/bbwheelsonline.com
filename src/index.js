@@ -46,17 +46,37 @@ const client = new SnapClient(globals, clientConfig);
 	search
  */
 
+// TODO: figure out how to start with a pre-applied filter
+
 const searchConfig = {
 	id: 'search',
 	globals: {
-		filters: [],
+		// filters: [
+		// 	{
+		// 		type: 'value',
+		// 		field: 'custom_deal_type',
+		// 		value: 'FREE GIFT!',
+		// 		// background: true,
+		// 	}
+		// ],
+		sorts: [
+			{
+				field: 'sortable_date_created',
+				direction: 'desc',
+			},
+		],
 	},
 	settings: {
 		redirects: {
 			enabled: true,
 		},
+		// facets: {
+		// 	trim: false,
+		// }
 	},
 };
+
+// window.history.pushState(null, null, '?filter.custom_deal_type=FREE GIFT!');
 
 // category bgFilter
 const v3Context = getV3ScriptAttrs();

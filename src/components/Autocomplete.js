@@ -197,6 +197,7 @@ export class Autocomplete extends Component {
 														{result.mappings.core.msrp > result.mappings.core.price && (
 															<span class="ss-ac-item-msrp">{currency(result.mappings.core.msrp)}</span>
 														)}
+														&nbsp;
 														<span
 															className={`ss-ac-item-regular ${result.mappings.core.msrp > result.mappings.core.price ? 'ss-ac-item-on-sale' : ''}`}
 														>

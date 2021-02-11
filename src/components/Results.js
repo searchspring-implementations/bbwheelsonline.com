@@ -1,6 +1,8 @@
 import { h, Fragment, Component } from 'preact';
 import { observer } from 'mobx-react';
 
+import { Banner } from '@searchspring/snap-preact-components';
+
 import { withStore } from '../services/providers';
 import { Profile } from './Profile';
 import { Toolbar } from './Toolbar';
@@ -31,8 +33,7 @@ export class Results extends Component {
 					<Toolbar />
 				</div>
 
-				{/* TODO Header Banner */}
-				{/* <div ng-if="merchandising.content.banner.length > 0" id="ss-merch-banner" class="ss-merchandising" ss-merchandising="banner"></div> */}
+				<Banner content={store.merchandising.content} type="banner" />
 
 				<div action="/compare" method="POST" data-product-compare>
 					<ul class="ss-item-container ss-item-container-grid productGrid">
@@ -44,8 +45,7 @@ export class Results extends Component {
 					</ul>
 				</div>
 
-				{/* TODO Footer Banner */}
-				{/* <div ng-if="merchandising.content.footer.length > 0" id="ss-merch-footer" class="ss-merchandising" ss-merchandising="footer"></div> */}
+				<Banner content={store.merchandising.content} type="footer" />
 
 				{pagination.totalPages > 1 && (
 					<div ng-if="pagination.totalPages > 1" class="ss-toolbar ss-toolbar-bottom">
