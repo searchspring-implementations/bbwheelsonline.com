@@ -34,6 +34,18 @@ jobs:
         shell: bash
         run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
         id: extract_branch
+      - name: Get Package Variables
+        id: package_variables
+        run: |
+          content=`cat ./package.json`
+          # the following lines are only required for multi line json
+          content="${content//'%'/'%25'}"
+          content="${content//$'\n'/'%0A'}"
+          content="${content//$'\r'/'%0D'}"
+          # end of optional handling for multi line json
+          echo "::set-output name=packageJson::$content"
+          echo "Variables:"
+          echo "${{fromJson(steps.package_variables.outputs.packageJson).searchspring}}"
       - name: Configure AWS credentials from Production account
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -42,4 +54,4 @@ jobs:
           aws-region: us-east-2
       - name: Copy files to s3
         run: |
-          aws s3 sync --delete --acl public-read dist s3://${{secrets.SNAPFU_AWS_BUCKET}}/{{snapfu.siteId}}/${{ steps.extract_branch.outputs.branch }}
+          aws s3 sync --delete --acl public-read dist s3://${{secrets.SNAPFU_AWS_BUCKET}}/${{fromJson(steps.package_variables.outputs.packageJson).searchspring.siteId}}/${{ steps.extract_branch.outputs.branch }}
