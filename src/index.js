@@ -51,20 +51,7 @@ const client = new SnapClient(globals, clientConfig);
 const searchConfig = {
 	id: 'search',
 	globals: {
-		// filters: [
-		// 	{
-		// 		type: 'value',
-		// 		field: 'custom_deal_type',
-		// 		value: 'FREE GIFT!',
-		// 		// background: true,
-		// 	}
-		// ],
-		sorts: [
-			{
-				field: 'sortable_date_created',
-				direction: 'desc',
-			},
-		],
+		filters: [],
 	},
 	settings: {
 		redirects: {

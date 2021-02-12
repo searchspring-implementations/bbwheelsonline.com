@@ -20,7 +20,7 @@ export class Result extends Component {
 		return (
 			<article class="card">
 				<figure class="card-figure">
-					<a href={result.url}>
+					<a href={core.url}>
 						<div class="card-img-container">
 							<img
 								class="card-image lazyload"
@@ -61,7 +61,7 @@ export class Result extends Component {
 						)}
 
 						{Boolean(custom.freeitem) && (
-							<span ng-if="result.freeitem" class="freeitem">
+							<span class="freeitem">
 								<img
 									alt="Free Bonus Item"
 									src="https://cdn11.bigcommerce.com/s-1gfd17pa/product_images/uploaded_images/bonus-item-banner-1-.jpg?t=1586457835&_ga=2.189712299.1040224083.1586184862-1496544752.1541531870"
@@ -86,7 +86,7 @@ export class Result extends Component {
 
 				<div class="card-body">
 					<h4 class="card-title">
-						<a href="{core.url}" class="card_name">
+						<a href={core.url} class="card_name">
 							{core.name}
 						</a>
 					</h4>
@@ -146,7 +146,7 @@ export class Result extends Component {
 					</a>
 				) : (
 					<a
-						href={`//www.bbwheelsonline.com/cart.php?action=add&amp;product_id=${result.id}`}
+						href={`//www.bbwheelsonline.com/cart.php?action=add&product_id=${result.id}`}
 						class="button button--small card-figcaption-button card__add-to-cart--bottom"
 						data-product-id={result.id}
 					>

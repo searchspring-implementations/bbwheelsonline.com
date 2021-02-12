@@ -50,10 +50,7 @@ export class Content extends Component {
 							<div class="ss-slideout-toolbar">
 								<FilterSummary />
 
-								<Slideout
-									displayAt={'screen and (max-width: 800px)'}
-									buttonContent={store.facets.length && store.pagination.totalResults && <SlideoutButton />}
-								>
+								<Slideout buttonContent={store.facets.length && store.pagination.totalResults && <SlideoutButton />}>
 									<SlideoutContent />
 								</Slideout>
 							</div>
