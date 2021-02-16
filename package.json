@@ -3,12 +3,13 @@
 	"version": "0.0.1",
 	"main": "index.js",
 	"scripts": {
-		"build": "webpack --mode=production",
-		"cypress": "cypress open --project tests",
+		"build": "rm -rf ./dist && webpack --mode=production",
+		"cypress": "cypress open --project testing",
 		"dev": "webpack serve",
 		"format": "prettier --write \"**/*.{js,ts,json}\"",
 		"lint": "eslint --fix \"**/*.{js,ts}\"",
-		"test": "cypress run --project tests"
+		"test": "cypress run --project testing",
+		"serve": "serve -l 5000 ./public"
 	},
 	"author": "kevin",
 	"searchspring": {
@@ -27,7 +28,7 @@
 		"@searchspring/snap-store-mobx-autocomplete": "^0.0.2",
 		"@searchspring/snap-store-mobx-finder": "^0.0.2",
 		"@searchspring/snap-store-mobx-search": "^0.0.11",
-		"@searchspring/snap-toolbox": "^0.0.15",
+		"@searchspring/snap-toolbox": "^0.0.16",
 		"@searchspring/snap-url-manager": "0.0.13",
 		"mobx": "^6.0.5",
 		"mobx-react": "^7.0.6",
@@ -46,7 +47,7 @@
 		"babel-loader": "^8.2.2",
 		"core-js": "^3.8.3",
 		"css-loader": "^5.0.1",
-		"cypress": "^6.3.0",
+		"cypress": "^6.5.0",
 		"eslint": "^7.18.0",
 		"eslint-plugin-react": "^7.22.0",
 		"file-loader": "^6.2.0",
@@ -56,6 +57,7 @@
 		"node-sass": "^5.0.0",
 		"prettier": "^2.2.1",
 		"sass-loader": "^10.1.1",
+		"serve": "^11.3.2",
 		"style-loader": "^2.0.0",
 		"webpack": "^5.18.0",
 		"webpack-bundle-analyzer": "^4.4.0",

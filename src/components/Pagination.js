@@ -19,7 +19,7 @@ export class Pagination extends Component {
 					<ul class="pagination-list">
 						{pagination.previous && (
 							<li class="pagination-item pagination-item--previous">
-								<a {...pagination.previous.url.link} class="pagination-link">
+								<a {...pagination.previous.url.link} class="pagination-link" data-snap-page="prev">
 									<i class="icon" aria-hidden="true">
 										<svg>
 											<use xmlnsXlink="http://www.w3.org/1999/xlink" xlinkHref="#icon-chevron-left"></use>
@@ -31,7 +31,7 @@ export class Pagination extends Component {
 
 						{pages.map((page) => (
 							<li key={page.key} class={`pagination-item ${page.active ? 'pagination-item--current' : ''}`}>
-								<a {...page.url.link} class="pagination-link">
+								<a {...page.url.link} class="pagination-link" data-snap-page={page.number}>
 									{page.number}
 								</a>
 							</li>
@@ -39,7 +39,7 @@ export class Pagination extends Component {
 
 						{pagination.next && (
 							<li class="ss-next pagination-item pagination-item--next">
-								<a {...pagination.next.url.link} class="pagination-link">
+								<a {...pagination.next.url.link} class="pagination-link" data-snap-page="next">
 									<i class="icon" aria-hidden="true">
 										<svg>
 											<use xmlnsXlink="http://www.w3.org/1999/xlink" xlinkHref="#icon-chevron-right"></use>

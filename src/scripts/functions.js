@@ -37,7 +37,7 @@ export async function until(thing, customOptions) {
 			}, options.checkTime);
 		}
 
-		function checkForThing(thing) {
+		async function checkForThing(thing) {
 			switch (typeof thing) {
 				case 'function': {
 					return thing();

@@ -2,6 +2,7 @@ import { h, Fragment, Component } from 'preact';
 import { observer } from 'mobx-react';
 
 import { Banner } from '@searchspring/snap-preact-components';
+import { log } from '@searchspring/snap-toolbox/logger';
 
 import { withStore } from '../services/providers';
 import { Profile } from './Profile';
@@ -13,12 +14,16 @@ import { matchHeights, until } from '../scripts/functions';
 @withStore
 @observer
 export class Results extends Component {
-	componentDidMount() {
-		matchHeights();
+	async componentDidMount() {
+		try {
+			await matchHeights();
+		} catch (err) {
+			log.error('failed to match heights');
+		}
 	}
 
 	componentDidUpdate() {
-		matchHeights();
+		this.componentDidMount();
 	}
 
 	render() {

@@ -13,7 +13,7 @@ async function scrollToTop({ controller }, next) {
 
 export const middleware = (controller) => {
 	controller.on('init', ({ controller }, next) => {
-		const versionText = 'SNAPreact 0.2.1 - bbwheelsonline.com';
+		const versionText = 'SNAPreact 0.2.3 - bbwheelsonline.com';
 
 		log.imageText({
 			url: 'https://searchspring.com/wp-content/themes/SearchSpring-Theme/dist/images/favicons/favicon.svg',

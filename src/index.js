@@ -99,20 +99,18 @@ search.use(middleware);
 
 // render components into entry points
 search.on('init', async ({ controller }) => {
-	const sidebarTarget = new DomTargeter(
+	const searchPageTarget = new DomTargeter(
 		[
 			{
-				selector: '#searchspring-sidebar',
-				component: <Sidebar store={controller.store} />,
+				selector: '.searchspring-container',
+				component: <SearchPage />,
 			},
 		],
 		(target, elem) => {
-			// run search after finding target
-			controller.search();
-
-			// empty element
-			while (elem.firstChild) elem.removeChild(elem.firstChild);
 			render(target.component, elem);
+
+			const breadcrumbTarget = document.querySelector('.page--searchresults ul.breadcrumbs');
+			breadcrumbTarget && render(<BreadCrumbs />, breadcrumbTarget);
 		}
 	);
 
@@ -124,36 +122,41 @@ search.on('init', async ({ controller }) => {
 			},
 		],
 		(target, elem) => {
+			// run search after finding target
+			controller.search();
+
 			// empty element
 			while (elem.firstChild) elem.removeChild(elem.firstChild);
 			render(target.component, elem);
 		}
 	);
 
-	const searchPageTarget = new DomTargeter(
+	const sidebarTarget = new DomTargeter(
 		[
 			{
-				selector: '.searchspring-container',
-				component: <SearchPage store={controller.store} />,
+				selector: '#searchspring-sidebar',
+				component: <Sidebar store={controller.store} />,
 			},
 		],
 		(target, elem) => {
-			// run search after finding target
-			controller.search();
-
+			// empty element
+			while (elem.firstChild) elem.removeChild(elem.firstChild);
 			render(target.component, elem);
-
-			const breadcrumbTarget = document.querySelector('.page--searchresults ul.breadcrumbs');
-			breadcrumbTarget && render(<BreadCrumbs />, breadcrumbTarget);
 		}
 	);
+
+	window.addEventListener('DOMContentLoaded', () => {
+		searchPageTarget.retarget();
+		contentTarget.retarget();
+		sidebarTarget.retarget();
+	});
 });
 
 const addStylesheets = () => {
 	new DomTargeter(
 		[
 			{
-				selector: 'body',
+				selector: 'head',
 				inject: {
 					action: 'prepend',
 					element: () => {
@@ -338,9 +341,7 @@ finderConfigs.forEach((finderConfig) => {
 
 // for testing purposes
 window.sssnap = {
-	controllers: {
-		search: search,
-		autocomplete: acsearch,
-		finders: finderInstances,
-	},
+	search: search,
+	autocomplete: acsearch,
+	finders: finderInstances,
 };

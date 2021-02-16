@@ -38,6 +38,7 @@ module.exports = {
 		],
 	},
 	output: {
+		publicPath: '',
 		path: path.join(__dirname, 'dist'),
 		filename: 'bundle.js',
 	},
@@ -62,6 +63,9 @@ module.exports = {
 		contentBase: [path.join(__dirname, 'public')],
 		contentBasePublicPath: ['/'],
 		watchContentBase: true,
+		writeToDisk: (filePath) => {
+			return /bundle\.js.*/.test(filePath);
+		},
 		hot: true,
 		publicPath: '/dist',
 		disableHostCheck: true,

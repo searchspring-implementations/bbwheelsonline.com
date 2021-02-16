@@ -16,7 +16,7 @@ jobs:
       - name: Cache node modules
         uses: actions/cache@v2
         env:
-            cache-name: cache-node-modules
+          cache-name: cache-node-modules
         with:
           # npm cache files are stored in `~/.npm` on Linux/macOS
           path: ~/.npm
@@ -30,6 +30,8 @@ jobs:
         env:
             NODE_AUTH_TOKEN: ${{ secrets.PACKAGE_TOKEN }}
       - run: npm run build
+      - run: npm run serve
+      - run: npm run test
       - name: Extract Variables
         id: variables
         shell: bash
