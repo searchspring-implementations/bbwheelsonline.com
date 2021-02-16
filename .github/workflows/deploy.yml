@@ -46,6 +46,7 @@ jobs:
         with:
           browser: chrome
           headless: true
+          project: './testing'
 
       - name: Extract Variables
         id: variables
