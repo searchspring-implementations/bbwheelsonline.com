@@ -4,15 +4,17 @@ on:
       - '**' # matches every branch
 
 jobs:
-  upload:
+  Test and Deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - name: Checkout repositiory
+        uses: actions/checkout@v2
+        uses: actions/setup-node@v2
         with:
           node-version: 12
           registry-url: 'https://npm.pkg.github.com'
           scope: '@searchspring'
+
       - name: Cache node modules
         uses: actions/cache@v2
         env:
@@ -26,12 +28,23 @@ jobs:
             ${{ runner.os }}-build-
             ${{ runner.os }}-
 
-      - run: npm install
+      - name: Install packages
+        run: npm install
         env:
-            NODE_AUTH_TOKEN: ${{ secrets.PACKAGE_TOKEN }}
-      - run: npm run build
-      - run: npm run serve &
-      - run: npm run test
+          NODE_AUTH_TOKEN: ${{ secrets.PACKAGE_TOKEN }}
+
+      - name: Build bundle
+        run: npm run build
+
+      - name: Start server
+        run: npm run serve &
+
+      - name: Run Cypress
+        uses: cypress-io/github-action@v2
+        with:
+          browser: chrome
+          headless: true
+      
       - name: Extract Variables
         id: variables
         shell: bash
