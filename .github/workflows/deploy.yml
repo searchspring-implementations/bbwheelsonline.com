@@ -38,11 +38,11 @@ jobs:
       - name: Build bundle
         run: npm run build
 
-      - name: Start server
-        run: npm run serve &
+      # - name: Start server
+      #   run: npm run serve &
 
-      - name: Run Cypress
-        run: npm run test
+      # - name: Run Cypress
+      #   run: npm run test
 
       - name: Extract Variables
         id: variables
