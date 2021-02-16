@@ -4,7 +4,7 @@ on:
       - '**' # matches every branch
 
 jobs:
-  Test and Deploy:
+  Deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repositiory
