@@ -258,7 +258,9 @@ acsearch.on('init', async ({ controller }) => {
 	);
 });
 
-acsearch.init();
+window.addEventListener('DOMContentLoaded', () => {
+	acsearch.init();
+});
 
 /*
 	finder
