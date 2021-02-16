@@ -11,4 +11,4 @@ dist
 coverage
 
 # ignore cypress videos
-tests/cypress/videos
+testing/cypress/screenshots
