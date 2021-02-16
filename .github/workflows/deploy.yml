@@ -30,7 +30,7 @@ jobs:
         env:
             NODE_AUTH_TOKEN: ${{ secrets.PACKAGE_TOKEN }}
       - run: npm run build
-      - run: npm run serve
+      - run: npm run serve &
       - run: npm run test
       - name: Extract Variables
         id: variables
