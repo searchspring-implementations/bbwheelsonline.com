@@ -42,11 +42,7 @@ jobs:
         run: npm run serve &
 
       - name: Run Cypress
-        uses: cypress-io/github-action@v2
-        with:
-          browser: chrome
-          headless: true
-          project: './testing'
+        run: npm run test
 
       - name: Extract Variables
         id: variables
