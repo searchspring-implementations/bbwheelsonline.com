@@ -3,7 +3,8 @@ const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPl
 
 module.exports = {
 	mode: 'development',
-	entry: './src/index.js',
+	entry: ['core-js/stable', './src/index.js'],
+	target: ['web', 'es5'],
 	module: {
 		rules: [
 			{
