@@ -156,7 +156,7 @@ const addStylesheets = () => {
 	new DomTargeter(
 		[
 			{
-				selector: 'head',
+				selector: 'body',
 				inject: {
 					action: 'prepend',
 					element: () => {
@@ -185,7 +185,6 @@ const addStylesheets = () => {
 };
 
 search.init();
-addStylesheets();
 
 /*
 	autocomplete
@@ -259,6 +258,7 @@ acsearch.on('init', async ({ controller }) => {
 });
 
 window.addEventListener('DOMContentLoaded', () => {
+	addStylesheets();
 	acsearch.init();
 });
 

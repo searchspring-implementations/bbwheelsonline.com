@@ -25,7 +25,6 @@ export class Result extends Component {
 							<img
 								class="card-image lazyload"
 								data-sizes="auto"
-								src={imageUrl}
 								onerror={`this.src='${fallbackImageUrl}'`}
 								data-src={imageUrl}
 								alt={core.name}
@@ -72,9 +71,9 @@ export class Result extends Component {
 
 					<figcaption class="card-figcaption">
 						<div class="card-figcaption-body">
-							<a class="button button--small card-figcaption-button quickview" data-product-id={result.id}>
+							<span class="button button--small card-figcaption-button quickview" data-product-id={result.id}>
 								Quick view
-							</a>
+							</span>
 
 							<label class="button button--small card-figcaption-button" for={`compare-${result.id}`}>
 								Compare

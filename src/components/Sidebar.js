@@ -20,7 +20,6 @@ export class Sidebar extends Component {
 				<StoreProvider store={store}>
 					<Profile name="Sidebar" profiler={profiler}>
 						<div id="facetedSearch" class="ss-sidebar-container facetedSearch sidebarBlock">
-							{/* TODO prevent render in mobile ? ng-if="!slideout.triggered" */}
 							<FilterSummary />
 							<DesktopFacets />
 							<FilterMessages />
