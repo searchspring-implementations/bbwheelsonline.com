@@ -23,20 +23,22 @@ export class Content extends Component {
 			<StoreProvider store={store}>
 				<Profile name="Content" profiler={profiler}>
 					<div class="ss-header-container">
-						<h2 class="ss-title ss-results-title">
-							<span>Showing </span>
-							{pagination.multiplePages === true && (
-								<span class="ss-results-count-range">
-									{pagination.begin} - {pagination.end}
+						{!store.loading && (
+							<h2 class="ss-title ss-results-title">
+								<span>Showing </span>
+								{pagination.multiplePages === true && (
+									<span class="ss-results-count-range">
+										{pagination.begin} - {pagination.end}
+									</span>
+								)}
+								{pagination.multiplePages ? ' of ' : ''}
+								<span class="ss-results-count-total">{pagination.totalResults}</span>
+								<span>
+									{' '}
+									result{pagination.totalResults == 1 ? '' : 's'} {search.query ? 'for \u0022' + search.query + '\u0022' : ''}
 								</span>
-							)}
-							{pagination.multiplePages ? ' of ' : ''}
-							<span class="ss-results-count-total">{pagination.totalResults}</span>
-							<span>
-								{' '}
-								result{pagination.totalResults == 1 ? '' : 's'} {search.query ? 'for \u0022' + search.query + '\u0022' : ''}
-							</span>
-						</h2>
+							</h2>
+						)}
 
 						{/* TODO original query (oq) */}
 						{/* <div ng-if="originalQuery" class="ss-oq">
