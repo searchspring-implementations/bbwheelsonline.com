@@ -1,9 +1,13 @@
 const path = require('path');
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 module.exports = {
 	mode: 'development',
-	entry: './src/index.js',
+	entry: ['core-js/stable', './src/index.js'],
+	target: ['web', 'es5'],
+	stats: {
+		modulesSort: 'size',
+		modulesSpace: 70,
+	},
 	module: {
 		rules: [
 			{
@@ -42,10 +46,6 @@ module.exports = {
 		path: path.join(__dirname, 'dist'),
 		filename: 'bundle.js',
 	},
-	plugins: [
-		/* uncomment to see analysis of bundle */
-		// new BundleAnalyzerPlugin()
-	],
 	resolve: {
 		extensions: ['.js', '.jsx'],
 		alias: {

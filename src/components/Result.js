@@ -1,7 +1,7 @@
 import { h, Fragment, Component } from 'preact';
 import { observer } from 'mobx-react';
 
-import { filters } from '@searchspring/snap-toolbox';
+import { currency } from '@searchspring/snap-toolbox/filters';
 
 import { Profile } from './Profile';
 
@@ -25,7 +25,6 @@ export class Result extends Component {
 							<img
 								class="card-image lazyload"
 								data-sizes="auto"
-								src={imageUrl}
 								onerror={`this.src='${fallbackImageUrl}'`}
 								data-src={imageUrl}
 								alt={core.name}
@@ -72,9 +71,9 @@ export class Result extends Component {
 
 					<figcaption class="card-figcaption">
 						<div class="card-figcaption-body">
-							<a class="button button--small card-figcaption-button quickview" data-product-id={result.id}>
+							<span class="button button--small card-figcaption-button quickview" data-product-id={result.id}>
 								Quick view
-							</a>
+							</span>
 
 							<label class="button button--small card-figcaption-button" for={`compare-${result.id}`}>
 								Compare
@@ -96,14 +95,14 @@ export class Result extends Component {
 							{onSale && (
 								<div class="price-section price-section--withoutTax non-sale-price--withoutTax">
 									<span data-product-non-sale-price-without-tax class="price price--non-sale">
-										{filters.currency(core.msrp)}
+										{currency(core.msrp)}
 									</span>
 								</div>
 							)}
 
 							<div class={`price-section price-section--withoutTax ${onSale ? 'ss-item-on-sale' : ''}`}>
 								<span data-product-price-without-tax class="price price--withoutTax">
-									{filters.currency(core.price)}
+									{currency(core.price)}
 								</span>
 							</div>
 
@@ -111,7 +110,7 @@ export class Result extends Component {
 								<div class="price-section price-section--saving price ss-item-on-sale">
 									<span class="price">You save </span>
 									<span data-product-price-saved class="price price--saving">
-										{filters.currency(core.msrp - core.price)}!
+										{currency(core.msrp - core.price)}!
 									</span>
 								</div>
 							)}

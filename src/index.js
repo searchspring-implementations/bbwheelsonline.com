@@ -1,4 +1,5 @@
 import { h, Fragment, render } from 'preact';
+import { configure as configureMobx } from 'mobx';
 
 /* searchspring imports */
 import SnapClient from '@searchspring/snap-client-javascript';
@@ -31,6 +32,10 @@ import { Autocomplete } from './components/Autocomplete';
 /*
 	configuration and instantiation
  */
+
+configureMobx({
+	useProxies: 'never',
+});
 
 const clientConfig = {
 	// apiHost: 'http://localhost:8080/api/v1',
@@ -156,7 +161,7 @@ const addStylesheets = () => {
 	new DomTargeter(
 		[
 			{
-				selector: 'head',
+				selector: 'body',
 				inject: {
 					action: 'prepend',
 					element: () => {
@@ -185,7 +190,6 @@ const addStylesheets = () => {
 };
 
 search.init();
-addStylesheets();
 
 /*
 	autocomplete
@@ -259,6 +263,7 @@ acsearch.on('init', async ({ controller }) => {
 });
 
 window.addEventListener('DOMContentLoaded', () => {
+	addStylesheets();
 	acsearch.init();
 });
 

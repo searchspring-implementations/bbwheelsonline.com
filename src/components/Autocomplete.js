@@ -1,9 +1,7 @@
 import { h, Component, Fragment } from 'preact';
 import { observer } from 'mobx-react';
 
-import { filters } from '@searchspring/snap-toolbox';
-const { currency, truncate, handleize } = filters;
-
+import { currency, truncate, handleize } from '@searchspring/snap-toolbox/filters';
 @observer
 export class Autocomplete extends Component {
 	render() {
