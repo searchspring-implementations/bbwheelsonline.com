@@ -16,7 +16,7 @@ export const finderware = (controller) => {
 };
 
 async function targetAndRender({ controller }, next) {
-	new DomTargeter(
+	const finderTarget = new DomTargeter(
 		[
 			{
 				selector: controller.config.selector,
@@ -34,6 +34,10 @@ async function targetAndRender({ controller }, next) {
 			render(finderComponent, elem);
 		}
 	);
+
+	window.addEventListener('DOMContentLoaded', () => {
+		finderTarget.retarget();
+	});
 
 	await next();
 }

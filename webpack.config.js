@@ -1,4 +1,3 @@
-const CompressionPlugin = require('compression-webpack-plugin');
 const path = require('path');
 
 module.exports = {
@@ -47,11 +46,6 @@ module.exports = {
 		path: path.join(__dirname, 'dist'),
 		filename: 'bundle.js',
 	},
-	plugins: [
-		new CompressionPlugin({
-			include: /bundle.js$/,
-		}),
-	],
 	resolve: {
 		extensions: ['.js', '.jsx'],
 		alias: {
