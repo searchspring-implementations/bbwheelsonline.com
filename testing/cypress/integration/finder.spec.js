@@ -1,6 +1,6 @@
 const searchURL = '/search';
 const config = {
-	url: 'http://www.bbwheelsonline.com',
+	url: 'https://www.bbwheelsonline.com',
 	selectors: {
 		finder: {
 			findButton: 'button.searchspring-finder_submit',
@@ -66,8 +66,8 @@ const config = {
 	],
 };
 
-config?.finderConfigs?.forEach((finder) => {
-	describe(`Finder id: ${finder.id}`, () => {
+config?.finderConfigs?.forEach((finder, _i) => {
+	describe(`${finder.id || _i}`, () => {
 		let isHierarchy = undefined;
 
 		describe('Setup', () => {
@@ -182,7 +182,7 @@ config?.finderConfigs?.forEach((finder) => {
 			});
 
 			it('can click the find button', function () {
-				if (!isHierarchy) this.skip();
+				if (!isHierarchy || !config.selectors?.finder?.findButton) this.skip();
 				cy.snapStore(`finders.${finder?.id}`).then((store) => {
 					if (!store.selections) this.skip();
 
@@ -194,26 +194,6 @@ config?.finderConfigs?.forEach((finder) => {
 				});
 			});
 		});
-
-		function shuffle(array) {
-			var currentIndex = array.length,
-				temporaryValue,
-				randomIndex;
-
-			// While there remain elements to shuffle...
-			while (0 !== currentIndex) {
-				// Pick a remaining element...
-				randomIndex = Math.floor(Math.random() * currentIndex);
-				currentIndex -= 1;
-
-				// And swap it with the current element.
-				temporaryValue = array[currentIndex];
-				array[currentIndex] = array[randomIndex];
-				array[randomIndex] = temporaryValue;
-			}
-
-			return array;
-		}
 
 		describe('Tests non-Hierarchy', () => {
 			it('has correct number of dropdowns', function () {
@@ -235,23 +215,23 @@ config?.finderConfigs?.forEach((finder) => {
 				});
 			});
 
-			it('can make all selections in random order', function () {
+			it('can make all selections', function () {
 				if (isHierarchy) this.skip();
 				cy.snapStore(`finders.${finder?.id}`).then((store) => {
-					const indexes = store.selections.map((_, index) => index);
-					shuffle(indexes); // randomize selection order
-					indexes.forEach((index) => {
+					store.selections.forEach((_, index) => {
 						cy.get(finder.selector)
 							.find('select')
 							.then((select) => {
 								select = select[index];
-								const valueToSelect = store.selections[index].data.filter((option) => option.count > 1).pop().value;
-								cy.get(select).select(valueToSelect);
-								cy.snapStore(`finders.${finder?.id}`).then((store) => {
-									expect(select.value).to.equal(valueToSelect);
-									expect(store.selections[index].selected).to.equal(valueToSelect);
-									expect(store.storage.state[`ss-finder-${finder.id}`][finder.fields[index].field].selected).to.equal(valueToSelect);
-								});
+								const valueToSelect = store.selections[index].data && store.selections[index].data.filter((option) => option.count > 1).shift().value;
+								if (valueToSelect) {
+									cy.get(select).select(valueToSelect);
+									cy.snapStore(`finders.${finder?.id}`).then((store) => {
+										expect(select.value).to.equal(valueToSelect);
+										expect(store.selections[index].selected).to.equal(valueToSelect);
+										expect(store.storage.state[`ss-finder-${finder.id}`][finder.fields[index].field].selected).to.equal(valueToSelect);
+									});
+								}
 							});
 					});
 				});
@@ -276,8 +256,30 @@ config?.finderConfigs?.forEach((finder) => {
 				});
 			});
 
-			it('can click the find button', function () {
+			it('can make all selections again', function () {
 				if (isHierarchy) this.skip();
+				cy.snapStore(`finders.${finder?.id}`).then((store) => {
+					store.selections.forEach((_, index) => {
+						cy.get(finder.selector)
+							.find('select')
+							.then((select) => {
+								select = select[index];
+								const valueToSelect = store.selections[index].data && store.selections[index].data.filter((option) => option.count > 1).shift().value;
+								if (valueToSelect) {
+									cy.get(select).select(valueToSelect);
+									cy.snapStore(`finders.${finder?.id}`).then((store) => {
+										expect(select.value).to.equal(valueToSelect);
+										expect(store.selections[index].selected).to.equal(valueToSelect);
+										expect(store.storage.state[`ss-finder-${finder.id}`][finder.fields[index].field].selected).to.equal(valueToSelect);
+									});
+								}
+							});
+					});
+				});
+			});
+
+			it('can click the find button', function () {
+				if (isHierarchy || !config.selectors?.finder?.findButton) this.skip();
 				cy.snapStore(`finders.${finder?.id}`).then((store) => {
 					if (!store.selections) this.skip();
 
