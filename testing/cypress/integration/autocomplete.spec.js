@@ -26,6 +26,7 @@ const config = {
 			},
 		},
 	},
+	disableGA: 'UA-43871982-1',
 };
 
 describe('Autocomplete', () => {
@@ -33,6 +34,10 @@ describe('Autocomplete', () => {
 		it('adds snap bundle to autocomplete page', () => {
 			cy.visit(config.url);
 			cy.addLocalSnap(); // as @script
+
+			if (config.disableGA) {
+				window[`ga-disable-${config.disableGA}`] = true;
+			}
 
 			cy.wait('@script').should((script) => {
 				expect(script.state).to.equal('Complete');
@@ -44,9 +49,9 @@ describe('Autocomplete', () => {
 	});
 
 	describe('Tests Autocomplete', () => {
-		let term = config.startingQuery;
+		let term = config.startingQuery || null;
 		it('can make single letter query', function () {
-			if (!config?.autocompleteConfig?.selector) this.skip();
+			if (!term && !config?.autocompleteConfig?.selector) this.skip();
 
 			cy.get(config.autocompleteConfig.selector).should('exist').type(term).wait(1000);
 			cy.snapStore(`autocomplete`).then((store) => {

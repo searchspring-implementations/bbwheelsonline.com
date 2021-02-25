@@ -31,6 +31,7 @@ const config = {
 			productWrapper: 'li.product',
 		},
 	},
+	disableGA: 'UA-43871982-1',
 };
 
 config?.pages?.forEach((page, _i) => {
@@ -40,6 +41,10 @@ config?.pages?.forEach((page, _i) => {
 				cy.on('uncaught:exception', (err, runnable) => false);
 				cy.visit(page.url);
 				cy.addLocalSnap(); // as @script
+
+				if (config.disableGA) {
+					window[`ga-disable-${config.disableGA}`] = true;
+				}
 
 				cy.wait('@script').should((script) => {
 					expect(script.state).to.equal('Complete');

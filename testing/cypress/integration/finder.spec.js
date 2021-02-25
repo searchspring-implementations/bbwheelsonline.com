@@ -64,6 +64,7 @@ const config = {
 			],
 		},
 	],
+	disableGA: 'UA-43871982-1',
 };
 
 config?.finderConfigs?.forEach((finder, _i) => {
@@ -74,6 +75,10 @@ config?.finderConfigs?.forEach((finder, _i) => {
 			it('adds snap bundle to finder page', () => {
 				cy.visit(config.url);
 				cy.addLocalSnap(); // as @script
+
+				if (config.disableGA) {
+					window[`ga-disable-${config.disableGA}`] = true;
+				}
 
 				cy.wait('@script').should((script) => {
 					expect(script.state).to.equal('Complete');
