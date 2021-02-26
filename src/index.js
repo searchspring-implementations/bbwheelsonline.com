@@ -262,6 +262,8 @@ acsearch.on('init', async ({ controller }) => {
 	);
 });
 
+addStylesheets();
+acsearch.init();
 window.addEventListener('DOMContentLoaded', () => {
 	addStylesheets();
 	acsearch.init();
