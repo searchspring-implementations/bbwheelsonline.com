@@ -69,18 +69,22 @@ export class Results extends Component {
 	}
 }
 
+@withStore
 @observer
 export class NoResults extends Component {
 	render() {
+		const store = this.props.store;
+		const dym = store.search.didYouMean;
 		return (
 			<div class="ss-no-results">
 				<div class="ss-no-results-container">
-					{/* TODO: DYM */}
-					{/* <p ng-if="didYouMean.query.length" class="ss-did-you-mean">
-						Did you mean <a href="{{ location().remove(context.search).add(context.search, didYouMean.query).url() }}">
-							{ didYouMean.query }
-						</a>?
-					</p> */}
+					{dym &&
+						<p class="ss-did-you-mean">
+							Did you mean <a href={dym.url.href}>
+								{ dym.query }
+							</a>?
+						</p>
+					}
 				</div>
 
 				<div class="ss-no-results-container">

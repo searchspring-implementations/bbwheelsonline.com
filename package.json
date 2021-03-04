@@ -20,11 +20,11 @@
 	"prettier": "@searchspring/prettier",
 	"dependencies": {
 		"@searchspring/snap-client-javascript": "^1.0.4",
-		"@searchspring/snap-controller": "^0.0.1",
+		"@searchspring/snap-controller": "^0.0.2",
 		"@searchspring/snap-event-manager": "^0.0.16",
 		"@searchspring/snap-preact-components": "^0.0.7",
 		"@searchspring/snap-profiler": "^0.0.11",
-		"@searchspring/snap-store-mobx": "^0.0.2",
+		"@searchspring/snap-store-mobx": "^0.0.3",
 		"@searchspring/snap-toolbox": "^0.0.23",
 		"@searchspring/snap-url-manager": "0.0.13",
 		"mobx": "^6.1.8",

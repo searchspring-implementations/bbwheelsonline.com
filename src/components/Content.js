@@ -23,7 +23,7 @@ export class Content extends Component {
 			<StoreProvider store={store}>
 				<Profile name="Content" profiler={profiler}>
 					<div class="ss-header-container">
-						{!store.loading && (
+						{store.loaded && ( 
 							<h2 class="ss-title ss-results-title">
 								<span>Showing </span>
 								{pagination.multiplePages === true && (

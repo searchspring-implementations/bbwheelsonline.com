@@ -3,7 +3,8 @@ const path = require('path');
 module.exports = {
 	mode: 'development',
 	entry: './src/index.js',
-	target: 'browserslist',
+	// target: 'browserslist',  TODO: hot reloading only works with 'web', fix by having two webpack configs
+	target: 'web',
 	stats: {
 		modulesSort: 'size',
 		modulesSpace: 70,

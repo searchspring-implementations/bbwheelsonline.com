@@ -13,7 +13,7 @@ export class Result extends Component {
 		const attributes = result.attributes;
 		const custom = result.custom;
 
-		const onSale = core.msrp && core.msrp > core.price;
+		const onSale = !!(core.msrp && core.msrp > core.price);
 		const fallbackImageUrl = '//cdn.searchspring.net/ajax_search/img/default_image.png';
 		const imageUrl = core.thumbnailImageUrl ? core.thumbnailImageUrl : fallbackImageUrl;
 
