@@ -2,8 +2,8 @@ const path = require('path');
 
 module.exports = {
 	mode: 'development',
-	entry: ['core-js/stable', './src/index.js'],
-	target: ['web', 'es5'],
+	entry: './src/index.js',
+	target: 'browserslist',
 	stats: {
 		modulesSort: 'size',
 		modulesSpace: 70,

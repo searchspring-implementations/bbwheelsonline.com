@@ -9,13 +9,8 @@ import { EventManager } from '@searchspring/snap-event-manager';
 import { Profiler } from '@searchspring/snap-profiler';
 import { DomTargeter } from '@searchspring/snap-toolbox';
 
-import { SearchController } from '@searchspring/snap-controller-search';
-import { AutocompleteController } from '@searchspring/snap-controller-autocomplete';
-import { FinderController } from '@searchspring/snap-controller-finder';
-
-import { SearchStore } from '@searchspring/snap-store-mobx-search';
-import { AutocompleteStore } from '@searchspring/snap-store-mobx-autocomplete';
-import { FinderStore } from '@searchspring/snap-store-mobx-finder';
+import { SearchController, AutocompleteController, FinderController } from '@searchspring/snap-controller';
+import { SearchStore, AutocompleteStore, FinderStore } from '@searchspring/snap-store-mobx';
 
 /* local imports */
 import config from '../package.json';
@@ -57,6 +52,9 @@ const searchConfig = {
 	id: 'search',
 	globals: {
 		filters: [],
+		// merchanding: {
+		// 	disabled: true
+		// }
 	},
 	settings: {
 		redirects: {
