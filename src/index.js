@@ -7,6 +7,7 @@ import SnapClient from '@searchspring/snap-client-javascript';
 import { UrlManager, QueryStringTranslator, ReactLinker } from '@searchspring/snap-url-manager';
 import { EventManager } from '@searchspring/snap-event-manager';
 import { Profiler } from '@searchspring/snap-profiler';
+import { Logger } from '@searchspring/snap-logger';
 import { DomTargeter } from '@searchspring/snap-toolbox';
 
 import { SearchController, AutocompleteController, FinderController } from '@searchspring/snap-controller';
@@ -95,6 +96,7 @@ const search = new SearchController(searchConfig, {
 	urlManager: new UrlManager(new QueryStringTranslator({ queryParameter: 'search_query' }), ReactLinker),
 	eventManager: new EventManager(),
 	profiler: new Profiler(),
+	logger: new Logger()
 });
 
 // custom codez
@@ -217,6 +219,7 @@ const acsearch = new AutocompleteController(acsearchConfig, {
 	urlManager: new UrlManager(new QueryStringTranslator({ queryParameter: 'search_query' }), ReactLinker),
 	eventManager: new EventManager(),
 	profiler: new Profiler(),
+	logger: new Logger()
 });
 
 acsearch.on('focusChange', ({ controller }) => {
@@ -340,6 +343,7 @@ finderConfigs.forEach((finderConfig) => {
 		urlManager: new UrlManager(new QueryStringTranslator(), ReactLinker),
 		eventManager: new EventManager(),
 		profiler: new Profiler(),
+		logger: new Logger()
 	});
 
 	finderInstance.use(finderware);

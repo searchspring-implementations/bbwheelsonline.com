@@ -9,7 +9,7 @@ export class Finder extends Component {
 		const { selections, controller, loading } = this.props.store;
 
 		return (
-			<Profile name={`Finder-${controller.config.id}`} profiler={controller.profiler}>
+			<Profile name={`Finder-${controller.config.id}`} controller={controller}>
 				<div class={`finder-container ${controller.config.className} ${loading ? 'disabled-loadingx' : ''}`}>
 					<div class="finder-wrapper">
 						{selections.map((selection) =>

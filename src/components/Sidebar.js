@@ -12,13 +12,13 @@ import { FilterSummary } from './FilterSummary';
 export class Sidebar extends Component {
 	render() {
 		const store = this.props.store;
-		const profiler = store.controller.profiler;
+		const controller = store.controller;
 		const isDesktop = useMediaQuery('(min-width: 801px)');
 
 		return (
 			isDesktop && (
 				<StoreProvider store={store}>
-					<Profile name="Sidebar" profiler={profiler}>
+					<Profile name="Sidebar" controller={controller}>
 						<div id="facetedSearch" class="ss-sidebar-container facetedSearch sidebarBlock">
 							<FilterSummary />
 							<DesktopFacets />

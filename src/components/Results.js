@@ -2,7 +2,6 @@ import { h, Fragment, Component } from 'preact';
 import { observer } from 'mobx-react';
 
 import { Banner } from '@searchspring/snap-preact-components';
-import { log } from '@searchspring/snap-toolbox/logger';
 
 import { withStore } from '../services/providers';
 import { Profile } from './Profile';
@@ -18,7 +17,7 @@ export class Results extends Component {
 		try {
 			await matchHeights();
 		} catch (err) {
-			log.error('failed to match heights');
+			this.props.store.controller.log.error('failed to match heights');
 		}
 	}
 

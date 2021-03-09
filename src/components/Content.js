@@ -14,14 +14,14 @@ import { Facets } from '../components/Facets';
 export class Content extends Component {
 	render() {
 		const store = this.props.store;
-		const profiler = store.controller.profiler;
+		const controller = store.controller;
 		const pagination = store.pagination;
 		const search = store.search;
 		const isMobile = useMediaQuery('(max-width: 800px)');
 
 		return (
 			<StoreProvider store={store}>
-				<Profile name="Content" profiler={profiler}>
+				<Profile name="Content" controller={controller}>
 					<div class="ss-header-container">
 						{store.loaded && ( 
 							<h2 class="ss-title ss-results-title">

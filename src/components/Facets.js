@@ -18,11 +18,11 @@ const sliderProps = {
 export class DesktopFacets extends Component {
 	render() {
 		const { facets } = this.props.store;
-		const profiler = this.props.store.controller.profiler;
+		const controller = this.props.store.controller;
 
 		return (
 			facets.length !== 0 && (
-				<Profile name="Facets" profiler={profiler}>
+				<Profile name="Facets" controller={controller}>
 					<div id="facetedSearch-navList" class="ss-facets facetedSearch-navList blocker-container">
 						<Facets />
 					</div>
@@ -60,11 +60,11 @@ export class Facets extends Component {
 export class Facet extends Component {
 	render() {
 		const facet = this.props.facet;
-		const profiler = this.props.store.controller.profiler;
+		const controller = this.props.store.controller;
 
 		return (
 			facet && (
-				<Profile name={`Facet-${facet.field}`} profiler={profiler}>
+				<Profile name={`Facet-${facet.field}`}  controller={controller}>
 					<div class="accordion-block">
 						<div
 							id={`ss-${facet.field}`}

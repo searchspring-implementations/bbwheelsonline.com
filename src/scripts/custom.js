@@ -1,7 +1,5 @@
 import { h, Fragment } from 'preact';
 
-import { log, colors, emoji } from '@searchspring/snap-toolbox/logger';
-
 async function scrollToTop({ controller }, next) {
 	// keep the same position when a user clicks on a facet
 	if (controller.store.pagination.page != 1) {
@@ -13,12 +11,12 @@ async function scrollToTop({ controller }, next) {
 
 export const middleware = (controller) => {
 	controller.on('init', ({ controller }, next) => {
-		const versionText = 'SNAPreact 0.2.3 - bbwheelsonline.com';
+		const versionText = 'bbwheelsonline.com';
 
-		log.imageText({
+		controller.log.imageText({
 			url: 'https://searchspring.com/wp-content/themes/SearchSpring-Theme/dist/images/favicons/favicon.svg',
-			text: `   ${versionText}`,
-			style: `color: ${colors.indigo}; font-weight: bold;`,
+			text: `${versionText}`,
+			style: `color: ${controller.log.colors.indigo}; font-weight: bold;`,
 		});
 
 		next();
@@ -168,7 +166,7 @@ export const middleware = (controller) => {
 
 	// log the store
 	controller.on('afterStore', ({ controller }, next) => {
-		log.debug('Search store:', controller.store.toJSON());
+		controller.log.debug('store', controller.store.toJSON());
 		next();
 	});
 };

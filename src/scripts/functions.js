@@ -1,5 +1,3 @@
-import { log } from '@searchspring/snap-toolbox/logger';
-
 // TODO - move to toolbox
 export async function until(thing, customOptions) {
 	const options = {

@@ -1,47 +1,88 @@
 // TODO move to components library
 
 import { h, Component } from 'preact';
-
-import { log, emoji, colors } from '@searchspring/snap-toolbox/logger';
-
 export class Profile extends Component {
+	logComponent = {
+		creation: ({ name }) => {
+			this.log.dev(
+				`%c +  %c<${name}/>  %c::  %cCREATED`,
+				`color: ${this.log.colors.orange}; font-weight: bold; font-size: 14px; line-height: 12px;`,
+				`color: ${this.log.colors.orange};`,
+				`color: ${this.log.colors.orangedark};`,
+				`color: ${this.log.colors.orange}; font-weight: bold;`
+			);
+		},
+		change: ({ name, info = 'changed' }) => {
+			this.log.dev(
+				`%c ${this.log.emoji.lightning}  %c<${name}/>  %c::  %c${info.toUpperCase()}`,
+				`color: ${this.log.colors.orange}; font-weight: bold; font-size: 14px; line-height: 12px;`,
+				`color: ${this.log.colors.orange};`,
+				`color: ${this.log.colors.orangedark};`,
+				`color: ${this.log.colors.orangedark}; font-weight: bold;`
+			);
+		},
+		error: ({ name, error = 'component crash' }) => {
+			this.log.dev(
+				`%c ${this.log.emoji.bang}  %c<${name}/>  %c::  %cERROR  %c::  %c${error}`,
+				`color: ${this.log.colors.red}`,
+				`color: ${this.log.colors.red};`,
+				`color: ${this.log.colors.orangedark};`,
+				`color: ${this.log.colors.red}; font-weight: bold;`,
+				`color: ${this.log.colors.orangedark};`,
+				`color: ${this.log.colors.redlight};`
+			);
+		},
+		render: ({ name, time }) => {
+			this.log.dev(
+				`%c ${this.log.emoji.magic}  %c<${name}/>  %c::  %cRENDERED  %c::  %c${time}ms`,
+				`color: ${this.log.colors.orange};`,
+				`color: ${this.log.colors.orange};`,
+				`color: ${this.log.colors.orangedark};`,
+				`color: ${this.log.colors.orangedark}; font-weight: bold;`,
+				`color: ${this.log.colors.orangedark};`,
+				`color: ${this.log.colors.grey};`
+			);
+		},
+		removal: ({ name }) => {
+			this.log.dev(
+				`%c -  %c<${name}/>  %c::  %cREMOVED`,
+				`color: ${this.log.colors.orange}; font-weight: bold; font-size: 14px; line-height: 12px;`,
+				`color: ${this.log.colors.orange};`,
+				`color: ${this.log.colors.orangedark};`,
+				`color: ${this.log.colors.reddark}; font-weight: bold;`
+			);
+		},
+	};
+
 	constructor(props) {
 		super(props);
 
 		this.name = props.name;
-		this.profiler = props.profiler;
+		this.controller = props.controller;
+		this.log = this.controller.log;
+		this.profiler = this.controller.profiler;
 		this.context = props.context;
 		this.profile = this.createProfile();
-
-		// logComponent.creation({ name: this.name });
-	}
-
-	componentDidUpdate() {
-		logComponent.change({ name: this.name, info: 'updated' });
-
-		if (!this.timer.start) {
-			this.timer.start = window.performance.now();
-		}
 	}
 
 	shouldComponentUpdate() {
 		this.profile = this.createProfile();
-		logComponent.change({ name: this.name, info: 'update triggered' });
+		this.logComponent.change({ name: this.name, info: 'update triggered' });
 	}
 
 	componentDidMount() {
 		this.profile.stop();
-		logComponent.render({ name: this.name, time: this.profile.time.run });
+		this.logComponent.render({ name: this.name, time: this.profile.time.run });
 	}
 
 	componentDidUpdate() {
 		this.profile.stop();
 
-		logComponent.render({ name: this.name, time: this.profile.time.run });
+		this.logComponent.change({ name: this.name, info: 'updated' });
 	}
 
 	componentDidCatch(error) {
-		logComponent.error({ name: this.name, error });
+		this.logComponent.error({ name: this.name, error });
 	}
 
 	createProfile() {
@@ -52,55 +93,3 @@ export class Profile extends Component {
 		return this.props.children;
 	}
 }
-
-const logComponent = {
-	creation: ({ name }) => {
-		log.dev(
-			`%c +  %c<${name}/>  %c::  %cCREATED`,
-			`color: ${colors.orange}; font-weight: bold; font-size: 14px; line-height: 12px;`,
-			`color: ${colors.orange};`,
-			`color: ${colors.orangedark};`,
-			`color: ${colors.orange}; font-weight: bold;`
-		);
-	},
-	change: ({ name, info = 'changed' }) => {
-		log.dev(
-			`%c ${emoji.lightning}  %c<${name}/>  %c::  %c${info.toUpperCase()}`,
-			`color: ${colors.orange}; font-weight: bold; font-size: 14px; line-height: 12px;`,
-			`color: ${colors.orange};`,
-			`color: ${colors.orangedark};`,
-			`color: ${colors.orangedark}; font-weight: bold;`
-		);
-	},
-	error: ({ name, error = 'component crash' }) => {
-		log.dev(
-			`%c ${emoji.bang}  %c<${name}/>  %c::  %cERROR  %c::  %c${error}`,
-			`color: ${colors.red}`,
-			`color: ${colors.red};`,
-			`color: ${colors.orangedark};`,
-			`color: ${colors.red}; font-weight: bold;`,
-			`color: ${colors.orangedark};`,
-			`color: ${colors.redlight};`
-		);
-	},
-	render: ({ name, time }) => {
-		log.dev(
-			`%c ${emoji.magic}  %c<${name}/>  %c::  %cRENDERED  %c::  %c${time}ms`,
-			`color: ${colors.orange};`,
-			`color: ${colors.orange};`,
-			`color: ${colors.orangedark};`,
-			`color: ${colors.orangedark}; font-weight: bold;`,
-			`color: ${colors.orangedark};`,
-			`color: ${colors.grey};`
-		);
-	},
-	removal: ({ name }) => {
-		log.dev(
-			`%c -  %c<${name}/>  %c::  %cREMOVED`,
-			`color: ${colors.orange}; font-weight: bold; font-size: 14px; line-height: 12px;`,
-			`color: ${colors.orange};`,
-			`color: ${colors.orangedark};`,
-			`color: ${colors.reddark}; font-weight: bold;`
-		);
-	},
-};

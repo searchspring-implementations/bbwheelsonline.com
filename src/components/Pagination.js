@@ -11,10 +11,10 @@ export class Pagination extends Component {
 		const store = this.props.store;
 		const pagination = store.pagination;
 		const pages = pagination.getPages(5);
-		const profiler = this.props.store.controller.profiler;
+		const controller = this.props.store.controller;
 
 		return (
-			<Profile name="Pagination" profiler={profiler}>
+			<Profile name="Pagination" controller={controller}>
 				<div class="pagination">
 					<ul class="pagination-list">
 						{pagination.previous && (
