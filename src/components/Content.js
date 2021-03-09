@@ -18,6 +18,7 @@ export class Content extends Component {
 		const pagination = store.pagination;
 		const search = store.search;
 		const isMobile = useMediaQuery('(max-width: 800px)');
+		const originalQuery = store.search.originalQuery;
 
 		return (
 			<StoreProvider store={store}>
@@ -40,10 +41,12 @@ export class Content extends Component {
 							</h2>
 						)}
 
-						{/* TODO original query (oq) */}
-						{/* <div ng-if="originalQuery" class="ss-oq">
-							Search instead for "<a class="ss-oq-link" href="{{ originalQuery.url }}">{{ originalQuery.value }}</a>"
-						</div> */}
+						
+						{originalQuery && 
+							<div class="ss-oq">
+								Search instead for "<a class="ss-oq-link" href={originalQuery.url.href}>{originalQuery.query}</a>"
+							</div>
+						}
 						<Banner content={store.merchandising.content} type="header" />
 					</div>
 
