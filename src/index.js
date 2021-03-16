@@ -14,7 +14,7 @@ import { SearchController, AutocompleteController, FinderController } from '@sea
 import { SearchStore, AutocompleteStore, FinderStore } from '@searchspring/snap-store-mobx';
 
 /* local imports */
-import config from '../package.json';
+import { searchspring } from '../package.json';
 import { middleware } from './scripts/custom';
 import { finderware } from './scripts/finders';
 import { getV3ScriptAttrs } from './scripts/functions';
@@ -38,7 +38,7 @@ const clientConfig = {
 };
 
 let globals = {
-	siteId: config.searchspring.siteId,
+	siteId: searchspring.siteId,
 };
 
 const client = new SnapClient(globals, clientConfig);
