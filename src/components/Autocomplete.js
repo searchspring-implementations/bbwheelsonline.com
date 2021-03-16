@@ -17,16 +17,15 @@ export class Autocomplete extends Component {
 		const delayTime = 200;
 
 		const emIfy = (term) => {
-			// TODO use search.query once it is part of the response
-			const match = term.match(state.input);
+			const match = term.match(search.query);
 
 			if (match) {
 				const beforeMatch = <em>{term.slice(0, match.index)}</em>;
-				const afterMatch = <em>{term.slice(match.index + state.input.length, term.length)}</em>;
+				const afterMatch = <em>{term.slice(match.index + search.query.length, term.length)}</em>;
 				return (
 					<Fragment>
 						{beforeMatch}
-						{state.input}
+						{search.query}
 						{afterMatch}
 					</Fragment>
 				);
