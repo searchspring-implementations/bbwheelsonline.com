@@ -1,6 +1,7 @@
 import { h, Component, Fragment } from 'preact';
 import { observer } from 'mobx-react';
 
+import { Banner } from '@searchspring/snap-preact-components';
 import { currency, truncate, handleize } from '@searchspring/snap-toolbox/filters';
 
 import { Profile } from './Profile';
@@ -8,7 +9,7 @@ import { Profile } from './Profile';
 export class Autocomplete extends Component {
 	render() {
 		const fallbackImageUrl = '//cdn.searchspring.net/ajax_search/img/default_image.png';
-		const { search, terms, results, pagination, filters, facets, state, controller } = this.props.store;
+		const { search, terms, results, merchandising, pagination, filters, facets, state, controller } = this.props.store;
 
 		const inputFocused = this.props.input === state.focusedInput;
 		const visible = inputFocused && terms.length > 0;
@@ -165,15 +166,15 @@ export class Autocomplete extends Component {
 													})()}
 												</div>
 											))}
-										{/* TODO: left merch */}
+										<Banner content={merchandising.content} type="left" class="ss-ac-merchandising" />
 									</div>
 								)}
 
 								<div id="ss-ac-results">
 									<h4 class="ss-title">Product Suggestions</h4>
 
-									{/* TODO: header merch */}
-									{/* TODO: banner merch */}
+									<Banner content={merchandising.content} type="header" class="ss-ac-merchandising" />
+									<Banner content={merchandising.content} type="banner" class="ss-ac-merchandising" />
 
 									<ul class="ss-ac-item-container">
 										{results.map((result) => (
@@ -210,7 +211,7 @@ export class Autocomplete extends Component {
 										))}
 									</ul>
 
-									{/* TODO: footer merch */}
+									<Banner content={merchandising.content} type="footer" class="ss-ac-merchandising" />
 
 									{results.length == 0 && (
 										<div class="ss-ac-no-results">
