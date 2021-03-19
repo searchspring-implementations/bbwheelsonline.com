@@ -3,6 +3,7 @@ const config = {
 		{ url: 'https://www.bbwheelsonline.com/search?search_query=red', id: 'Search' },
 		{ url: 'https://www.bbwheelsonline.com/lighting/', id: 'Category' },
 	],
+	disableGA: 'UA-43871982-1',
 	selectors: {
 		sidebar: {
 			facetWrapper: '.ss-facet-container',
@@ -31,7 +32,6 @@ const config = {
 			productWrapper: 'li.product',
 		},
 	},
-	disableGA: 'UA-43871982-1',
 };
 
 config?.pages?.forEach((page, _i) => {
@@ -57,6 +57,7 @@ config?.pages?.forEach((page, _i) => {
 					expect(typeof store).to.equal('object');
 				});
 			});
+
 			it('injects into main containers', () => {
 				cy.get('#searchspring-sidebar').should('exist');
 				cy.get('#searchspring-content').should('exist');
@@ -179,7 +180,7 @@ config?.pages?.forEach((page, _i) => {
 						let isCollapsed = !el.find(config.selectors.sidebar.facetOpenClass).length > 0;
 						expect(store.facets[index].collapse).to.equal(isCollapsed);
 						// click on the facet collapse button to toggle collapse
-						el.find(config.selectors.sidebar.facetCollapseButton).click();
+						cy.get(el.find(config.selectors.sidebar.facetCollapseButton)).click();
 						cy.snapStore().then((store) => {
 							// check to see if collapse state was toggled in store
 							isCollapsed = !el.find(config.selectors.sidebar.facetOpenClass).length > 0;
@@ -188,6 +189,7 @@ config?.pages?.forEach((page, _i) => {
 					});
 				});
 			});
+
 			it('can toggle facet overflow', function () {
 				if (!config?.selectors?.sidebar?.facetWrapper && !config?.selectors?.sidebar?.showMoreButton && !config?.selectors?.sidebar?.facetOption)
 					this.skip();
@@ -204,6 +206,15 @@ config?.pages?.forEach((page, _i) => {
 							}
 						})
 						.then(() => {
+							// ensure facet is not collapsed
+							facetElementsWithOverflow.forEach((overflowingFacet, index) => {
+								if (overflowFacets[index].collapse) {
+									// toggle visibility if collapsed
+									cy.get(overflowingFacet.find(config.selectors.sidebar.facetCollapseButton)).click();
+								}
+							});
+						})
+						.then(() => {
 							// ensure visible facet options is limited
 							facetElementsWithOverflow.forEach((overflowingFacet, index) => {
 								const visibleOptions = overflowingFacet.find(config.selectors.sidebar.facetOption);
@@ -213,7 +224,7 @@ config?.pages?.forEach((page, _i) => {
 						.then(() => {
 							// click on the 'show more' buttons to expand
 							facetElementsWithOverflow.forEach((overflowingFacet, index) => {
-								overflowingFacet.find(config.selectors.sidebar.showMoreButton)[0].click();
+								cy.get(overflowingFacet.find(config.selectors.sidebar.showMoreButton)).click();
 							});
 						})
 						.then(() => {
@@ -281,7 +292,7 @@ config?.pages?.forEach((page, _i) => {
 									facetListElement = facet;
 									if (listFacet.collapse) {
 										// toggle visibility if collapsed
-										facet.find(config.selectors.sidebar.facetCollapseButton).click();
+										cy.get(facet.find(config.selectors.sidebar.facetCollapseButton)).click();
 									}
 								}
 							})
@@ -289,7 +300,7 @@ config?.pages?.forEach((page, _i) => {
 								// click on an option in facet and ensure urlManager contains new state
 								const facetListOption = facetListElement.find(config.selectors.sidebar.facetOption)[0];
 								const clickedValue = facetListOption.innerText;
-								facetListOption.click();
+								cy.get(facetListOption).click();
 								cy.snapStore().then((store) => {
 									expect(Object.keys(store.controller.urlManager.state.filter)).to.contain(listFacet.field);
 									const value = store.controller.urlManager.state.filter[listFacet.field][0];
@@ -341,7 +352,7 @@ config?.pages?.forEach((page, _i) => {
 									facetGridElement = facet;
 									if (gridFacet.collapse) {
 										// toggle visibility if collapsed
-										facet.find(config.selectors.sidebar.facetCollapseButton).click();
+										cy.get(facet.find(config.selectors.sidebar.facetCollapseButton)).click();
 									}
 								}
 							})
@@ -349,7 +360,7 @@ config?.pages?.forEach((page, _i) => {
 								// click on an option in facet and ensure urlManager contains new state
 								const facetGridOption = facetGridElement.find(config.selectors.sidebar.facetOption)[0];
 								const clickedValue = facetGridOption.innerText;
-								facetGridOption.click();
+								cy.get(facetGridOption).click();
 								cy.snapStore().then((store) => {
 									expect(Object.keys(store.controller.urlManager.state.filter)).to.contain(gridFacet.field);
 									const value = store.controller.urlManager.state.filter[gridFacet.field][0];
@@ -382,7 +393,7 @@ config?.pages?.forEach((page, _i) => {
 									facetPaletteElement = facet;
 									if (paletteFacet.collapse) {
 										// toggle visibility if collapsed
-										facet.find(config.selectors.sidebar.facetCollapseButton).click();
+										cy.get(facet.find(config.selectors.sidebar.facetCollapseButton)).click();
 									}
 								}
 							})
@@ -390,7 +401,7 @@ config?.pages?.forEach((page, _i) => {
 								// click on an option in facet and ensure urlManager contains new state
 								const facetPaletteOption = facetPaletteElement.find(config.selectors.sidebar.facetOption)[0];
 								const clickedValue = facetPaletteOption.innerText;
-								facetPaletteOption.click();
+								cy.get(facetPaletteOption).click();
 								cy.snapStore().then((store) => {
 									expect(Object.keys(store.controller.urlManager.state.filter)).to.contain(paletteFacet.field);
 									const value = store.controller.urlManager.state.filter[paletteFacet.field][0];
@@ -420,7 +431,7 @@ config?.pages?.forEach((page, _i) => {
 									facetSliderElement = facet;
 									if (sliderFacet.collapse) {
 										// toggle visibility if collapsed
-										facet.find(config.selectors.sidebar.facetCollapseButton).click();
+										cy.get(facet.find(config.selectors.sidebar.facetCollapseButton)).click();
 									}
 								}
 							})
@@ -476,7 +487,7 @@ config?.pages?.forEach((page, _i) => {
 									facetHierarchyElement = facet;
 									if (hierarchyFacet.collapse) {
 										// toggle visibility if collapsed
-										facet.find(config.selectors.sidebar.facetCollapseButton).click();
+										cy.get(facet.find(config.selectors.sidebar.facetCollapseButton)).click();
 									}
 								}
 							})
@@ -484,7 +495,7 @@ config?.pages?.forEach((page, _i) => {
 								// click on an option in facet and ensure urlManager contains new state
 								const facetHierarchyOption = facetHierarchyElement.find(config.selectors.sidebar.facetOption)[0];
 								const clickedValue = facetHierarchyOption.innerText.split('(')[0].trim();
-								facetHierarchyOption.click();
+								cy.get(facetHierarchyOption).click();
 								cy.snapStore().then((store) => {
 									expect(Object.keys(store.controller.urlManager.state.filter)).to.contain(hierarchyFacet.field);
 									const value = store.controller.urlManager.state.filter[hierarchyFacet.field][0].split(hierarchyFacet.hierarchyDelimiter).pop();

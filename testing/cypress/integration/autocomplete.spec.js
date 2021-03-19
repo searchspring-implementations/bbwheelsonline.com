@@ -1,5 +1,6 @@
 const config = {
-	url: 'https://www.bbwheelsonline.com',
+	url: 'https://www.bbwheelsonline.com/about-us/',
+	disableGA: 'UA-43871982-1',
 	selectors: {
 		autocomplete: {
 			term: (num) => `#ss-ac-terms .ss-list-option${num ? `:nth-child(${num})` : ``} a`,
@@ -26,7 +27,6 @@ const config = {
 			},
 		},
 	},
-	disableGA: 'UA-43871982-1',
 };
 
 describe('Autocomplete', () => {
@@ -42,9 +42,6 @@ describe('Autocomplete', () => {
 			cy.wait('@script').should((script) => {
 				expect(script.state).to.equal('Complete');
 			});
-
-			cy.wait('@meta').should('exist');
-			cy.wait('@search').should('exist');
 		});
 	});
 
@@ -54,11 +51,14 @@ describe('Autocomplete', () => {
 			if (!term && !config?.autocompleteConfig?.selector) this.skip();
 
 			cy.get(config.autocompleteConfig.selector).should('exist').type(term).wait(1000);
+
+			cy.wait('@autocomplete').should('exist');
+
 			cy.snapStore(`autocomplete`).then((store) => {
 				expect(store.terms.length).to.greaterThan(0);
 
 				if (config.autocompleteConfig?.globals?.suggestions?.count) {
-					expect(config.autocompleteConfig?.globals?.suggestions?.count).to.gte(store.terms.length);
+					expect(store.terms.length).to.lte(config.autocompleteConfig?.globals?.suggestions?.count);
 				}
 
 				term = store.terms[0].value;
@@ -82,14 +82,17 @@ describe('Autocomplete', () => {
 			if (!config?.autocompleteConfig?.selector) this.skip();
 
 			cy.get(config.autocompleteConfig.selector).should('exist').type(term).wait(1000);
+
+			cy.wait('@autocomplete').should('exist');
+
 			cy.snapStore(`autocomplete`).then((store) => {
 				expect(store.terms.length).to.greaterThan(0);
 
 				if (config.autocompleteConfig?.globals?.suggestions?.count) {
-					expect(config.autocompleteConfig?.globals?.suggestions?.count).to.gte(store.terms.length);
+					expect(store.terms.length).to.lte(config.autocompleteConfig?.globals?.suggestions?.count);
 				}
 
-				expect(term).to.equal(store.terms[0].value);
+				expect(store.terms[0].value).to.equal(term);
 			});
 		});
 

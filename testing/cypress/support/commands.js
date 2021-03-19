@@ -57,8 +57,8 @@ Cypress.Commands.add('addScripts', (scripts = []) => {
 });
 
 Cypress.Commands.add('addLocalSnap', () => {
-	cy.intercept('localhost:5000/dist/bundle.js').as('script');
-	cy.addScript('http://localhost:5000/dist/bundle.js');
+	cy.intercept('localhost:3333/dist/bundle.js').as('script');
+	cy.addScript('https://localhost:3333/dist/bundle.js');
 });
 
 Cypress.Commands.add('addCloudSnap', (branch = 'master') => {

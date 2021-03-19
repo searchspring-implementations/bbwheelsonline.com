@@ -1,6 +1,7 @@
 const searchURL = '/search';
 const config = {
 	url: 'https://www.bbwheelsonline.com',
+	disableGA: 'UA-43871982-1',
 	selectors: {
 		finder: {
 			findButton: 'button.searchspring-finder_submit',
@@ -64,7 +65,6 @@ const config = {
 			],
 		},
 	],
-	disableGA: 'UA-43871982-1',
 };
 
 config?.finderConfigs?.forEach((finder, _i) => {
@@ -91,12 +91,14 @@ config?.finderConfigs?.forEach((finder, _i) => {
 					expect(typeof store).to.equal('object');
 				});
 			});
+
 			it('has data in the store', () => {
 				cy.snapStore(`finders.${finder?.id}`).then((store) => {
 					expect(store).to.haveOwnProperty('selections');
 					expect(store).to.haveOwnProperty('storage');
 				});
 			});
+
 			it('determines if Hierarchy or not', () => {
 				cy.snapStore(`finders.${finder?.id}`).then((store) => {
 					const facet = finder.fields.map((field) => {
@@ -116,6 +118,7 @@ config?.finderConfigs?.forEach((finder, _i) => {
 					cy.get(finder.selector).find('select').should('exist').should('have.length', store.selections.length);
 				});
 			});
+
 			it('only first select enabled', function () {
 				if (!isHierarchy) this.skip();
 				cy.snapStore(`finders.${finder?.id}`).then((store) => {
@@ -131,6 +134,7 @@ config?.finderConfigs?.forEach((finder, _i) => {
 						});
 				});
 			});
+
 			it('other select have expected disable state', function () {
 				if (!isHierarchy) this.skip();
 				cy.snapStore(`finders.${finder?.id}`).then((store) => {
