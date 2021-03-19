@@ -30,3 +30,15 @@
 .ss-results .ss-toolbar.ss-toolbar-bottom {
 	display: block;
 }
+
+.ss-inline-banner {
+	color: #333;
+	width: 100%;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+.ss-inline-banner iframe {
+	max-width: 100%;
+}

@@ -4,11 +4,12 @@ import { observer } from 'mobx-react';
 import { Banner } from '@searchspring/snap-preact-components';
 import { currency, truncate, handleize } from '@searchspring/snap-toolbox/filters';
 
+import { InlineBanner } from './InlineBanner';
 import { Profile } from './Profile';
+
 @observer
 export class Autocomplete extends Component {
 	render() {
-		const fallbackImageUrl = '//cdn.searchspring.net/ajax_search/img/default_image.png';
 		const { search, terms, results, merchandising, pagination, filters, facets, state, controller } = this.props.store;
 
 		const inputFocused = this.props.input === state.focusedInput;
@@ -16,6 +17,17 @@ export class Autocomplete extends Component {
 
 		let delayTimeout;
 		const delayTime = 200;
+		const mouseEvents = {
+			onMouseEnter: (e) => {
+				clearTimeout(delayTimeout);
+				delayTimeout = setTimeout(() => {
+					e.target.focus();
+				}, delayTime);
+			},
+			onMouseLeave: () => {
+				clearTimeout(delayTimeout);
+			},
+		};
 
 		const emIfy = (term) => {
 			const match = term.match(search.query);
@@ -37,18 +49,6 @@ export class Autocomplete extends Component {
 					<em>{term}</em>
 				</Fragment>
 			);
-		};
-
-		const mouseEvents = {
-			onMouseEnter: (e) => {
-				clearTimeout(delayTimeout);
-				delayTimeout = setTimeout(() => {
-					e.target.focus();
-				}, delayTime);
-			},
-			onMouseLeave: () => {
-				clearTimeout(delayTimeout);
-			},
 		};
 
 		return (
@@ -92,78 +92,23 @@ export class Autocomplete extends Component {
 													<h4 class="ss-title">{facet.label}</h4>
 
 													{/* facet switch on facet.display */}
-													{(() => {
+													{
+														{
+															grid: <AutocompleteFacetGrid facet={facet} mouseEvents={mouseEvents} />,
+															palette: <AutocompleteFacetPalette facet={facet} mouseEvents={mouseEvents} />,
+														}[facet.display] || <AutocompleteFacetList facet={facet} mouseEvents={mouseEvents} />
+													}
+
+													{/* {(() => {
 														switch (facet.display) {
 															case 'grid':
-																return (
-																	<ul class="ss-grid">
-																		{facet.values.slice(0, 6).map((value) => (
-																			<li class="ss-grid-option">
-																				<a
-																					className={`ss-grid-link ${value.filtered ? 'ss-active' : ''}`}
-																					href={value.url.href}
-																					{...mouseEvents}
-																					onFocus={() => {
-																						value.preview();
-																					}}
-																				>
-																					<div class="ss-grid-block">
-																						<div class="ss-grid-value">
-																							<div class="ss-grid-label">{value.label}</div>
-																						</div>
-																					</div>
-																				</a>
-																			</li>
-																		))}
-																	</ul>
-																);
+																return <AutocompleteFacetGrid facet={facet} />;
 															case 'palette':
-																return (
-																	<ul class="ss-palette">
-																		{facet.values.slice(0, 6).map((value) => (
-																			<li className="ss-palette-option">
-																				<a
-																					className={`ss-palette-link ${value.filtered ? 'ss-active' : ''}`}
-																					href={value.url.href}
-																					{...mouseEvents}
-																					onFocus={() => {
-																						value.preview();
-																					}}
-																					alt={value.label}
-																				>
-																					<div class="ss-palette-block">
-																						<div
-																							className={`ss-palette-color ss-palette-color-${handleize(value.value)}`}
-																							style={`background-color: ${handleize(value.value)};`}
-																						></div>
-																					</div>
-																					<div class="ss-palette-label">{value.label}</div>
-																				</a>
-																			</li>
-																		))}
-																	</ul>
-																);
+																return <AutocompleteFacetPalette facet={facet} />;
 															default:
-																return (
-																	<ul class="ss-list">
-																		{facet.values.slice(0, 5).map((value) => (
-																			<li class="ss-list-option">
-																				<a
-																					className={`ss-list-link ${value.filtered ? 'ss-active' : ''}`}
-																					href={value.url.href}
-																					{...mouseEvents}
-																					onFocus={() => {
-																						value.preview();
-																					}}
-																				>
-																					{value.label}
-																				</a>
-																			</li>
-																		))}
-																	</ul>
-																);
+																return <AutocompleteFacetList facet={facet} />;
 														}
-													})()}
+													})()} */}
 												</div>
 											))}
 										<Banner content={merchandising.content} type="left" class="ss-ac-merchandising" />
@@ -177,36 +122,27 @@ export class Autocomplete extends Component {
 									<Banner content={merchandising.content} type="banner" class="ss-ac-merchandising" />
 
 									<ul class="ss-ac-item-container">
-										{results.map((result) => (
-											<li class="ss-ac-item">
-												<a href={result.mappings.core.url}>
-													<div class="ss-ac-item-image">
-														<div class="ss-image-wrapper">
-															<img
-																src={result.mappings.core.thumbnailImageUrl || fallbackImageUrl}
-																onerror={`this.src='${fallbackImageUrl}';`}
-																alt={result.mappings.core.name}
-																title={result.mappings.core.name}
-															/>
-														</div>
-													</div>
+										{results.map((result, index) => (
+											<li class="ss-ac-item" key={result.id}>
+												{
+													{
+														banner: <InlineBanner content={result} />
+													}[result.type] || <AutocompleteResult result={result} />
+												}
 
-													<div class="ss-ac-item-details">
-														<p class="ss-ac-item-name">{truncate(result.mappings.core.name, 40, '…')}</p>
-
-														<p class="ss-ac-item-price">
-															{result.mappings.core.msrp > result.mappings.core.price && (
-																<span class="ss-ac-item-msrp">{currency(result.mappings.core.msrp)}</span>
-															)}
-															&nbsp;
-															<span
-																className={`ss-ac-item-regular ${result.mappings.core.msrp > result.mappings.core.price ? 'ss-ac-item-on-sale' : ''}`}
-															>
-																{currency(result.mappings.core.price)}
-															</span>
-														</p>
-													</div>
-												</a>
+												{/* {(() => {
+													switch (result.type) {
+														case 'banner':
+															return (
+																<InlineBanner content={result} />
+															);
+														default:
+														case 'product':
+															return (
+																<AutocompleteResult result={result} />
+															);
+													}
+												})()} */}
 											</li>
 										))}
 									</ul>
@@ -234,5 +170,132 @@ export class Autocomplete extends Component {
 				</Profile>
 			)
 		);
+	}
+}
+
+class AutocompleteFacetGrid extends Component {
+	render() {
+		const facet = this.props.facet;
+		const mouseEvents = this.props.mouseEvents;
+
+		return (
+			<ul class="ss-grid">
+				{facet.values.slice(0, 6).map((value) => (
+					<li class="ss-grid-option">
+						<a
+							className={`ss-grid-link ${value.filtered ? 'ss-active' : ''}`}
+							href={value.url.href}
+							{...mouseEvents}
+							onFocus={() => {
+								value.preview();
+							}}
+						>
+							<div class="ss-grid-block">
+								<div class="ss-grid-value">
+									<div class="ss-grid-label">{value.label}</div>
+								</div>
+							</div>
+						</a>
+					</li>
+				))}
+			</ul>
+		);
+	}
+}
+
+class AutocompleteFacetPalette extends Component {
+	render() {
+		const facet = this.props.facet;
+		const mouseEvents = this.props.mouseEvents;
+
+		return (
+			<ul class="ss-palette">
+				{facet.values.slice(0, 6).map((value) => (
+					<li className="ss-palette-option">
+						<a
+							className={`ss-palette-link ${value.filtered ? 'ss-active' : ''}`}
+							href={value.url.href}
+							{...mouseEvents}
+							onFocus={() => {
+								value.preview();
+							}}
+							alt={value.label}
+						>
+							<div class="ss-palette-block">
+								<div
+									className={`ss-palette-color ss-palette-color-${handleize(value.value)}`}
+									style={`background-color: ${handleize(value.value)};`}
+								></div>
+							</div>
+							<div class="ss-palette-label">{value.label}</div>
+						</a>
+					</li>
+				))}
+			</ul>
+		);
+	}
+}
+
+class AutocompleteFacetList extends Component {
+	render() {
+		const facet = this.props.facet;
+		const mouseEvents = this.props.mouseEvents;
+
+		return (
+			<ul class="ss-list">
+				{facet.values.slice(0, 5).map((value) => (
+					<li class="ss-list-option">
+						<a
+							className={`ss-list-link ${value.filtered ? 'ss-active' : ''}`}
+							href={value.url.href}
+							{...mouseEvents}
+							onFocus={() => {
+								value.preview();
+							}}
+						>
+							{value.label}
+						</a>
+					</li>
+				))}
+			</ul>
+		);
+	}
+}
+
+class AutocompleteResult extends Component {
+	render() {
+		const fallbackImageUrl = '//cdn.searchspring.net/ajax_search/img/default_image.png';
+		const result = this.props.result;
+
+		return (
+			<a href={result.mappings.core.url}>
+				<div class="ss-ac-item-image">
+					<div class="ss-image-wrapper">
+						<img
+							src={result.mappings.core.thumbnailImageUrl || fallbackImageUrl}
+							onerror={`this.src='${fallbackImageUrl}';`}
+							alt={result.mappings.core.name}
+							title={result.mappings.core.name}
+						/>
+					</div>
+				</div>
+
+				<div class="ss-ac-item-details">
+					<p class="ss-ac-item-name">{truncate(result.mappings.core.name, 40, '…')}</p>
+
+					<p class="ss-ac-item-price">
+						{result.mappings.core.msrp > result.mappings.core.price && (
+							<span class="ss-ac-item-msrp">{currency(result.mappings.core.msrp)}</span>
+						)}
+						&nbsp;
+						<span
+							className={`ss-ac-item-regular ${result.mappings.core.msrp > result.mappings.core.price ? 'ss-ac-item-on-sale' : ''}`}
+						>
+							{currency(result.mappings.core.price)}
+						</span>
+					</p>
+				</div>
+			</a>
+		)
 	}
 }

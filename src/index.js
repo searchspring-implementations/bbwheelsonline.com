@@ -103,7 +103,7 @@ const search = new SearchController(searchConfig, {
 search.use(middleware);
 
 // render components into entry points
-search.on('init', async ({ controller }) => {
+search.on('init', async ({ controller }, next) => {
 	const searchPageTarget = new DomTargeter(
 		[
 			{
@@ -155,6 +155,8 @@ search.on('init', async ({ controller }) => {
 		contentTarget.retarget();
 		sidebarTarget.retarget();
 	});
+
+	await next();
 });
 
 const addStylesheets = () => {
@@ -222,7 +224,7 @@ const acsearch = new AutocompleteController(acsearchConfig, {
 	logger: new Logger()
 });
 
-acsearch.on('focusChange', ({ controller }) => {
+acsearch.on('focusChange', async({ controller }, next) => {
 	if (controller.store.state.focusedInput) {
 		document.querySelectorAll('html, body').forEach((elem) => {
 			elem.classList.add('ss-ac-open');
@@ -232,6 +234,8 @@ acsearch.on('focusChange', ({ controller }) => {
 			elem.classList.remove('ss-ac-open');
 		});
 	}
+
+	await next();
 });
 
 acsearch.on('init', async ({ controller }) => {
@@ -265,6 +269,7 @@ acsearch.on('init', async ({ controller }) => {
 
 addStylesheets();
 acsearch.init();
+
 window.addEventListener('DOMContentLoaded', () => {
 	addStylesheets();
 	acsearch.init();

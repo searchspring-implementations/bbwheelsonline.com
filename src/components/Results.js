@@ -8,6 +8,7 @@ import { Profile } from './Profile';
 import { Toolbar } from './Toolbar';
 import { Pagination } from './Pagination';
 import { Result } from './Result';
+import { InlineBanner } from './InlineBanner';
 import { matchHeights, until } from '../scripts/functions';
 
 @withStore
@@ -42,8 +43,12 @@ export class Results extends Component {
 				<div action="/compare" method="POST" data-product-compare>
 					<ul class="ss-item-container ss-item-container-grid productGrid">
 						{results.map((result) => (
-							<li class="product">
-								<Result key={result.id} result={result} />
+							<li class="product" key={result.id}>
+								{
+									{
+										banner: <InlineBanner content={result} />
+									}[result.type] || <Result result={result} />
+								}
 							</li>
 						))}
 					</ul>

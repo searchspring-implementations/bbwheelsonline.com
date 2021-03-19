@@ -10,7 +10,7 @@ async function scrollToTop({ controller }, next) {
 }
 
 export const middleware = (controller) => {
-	controller.on('init', ({ controller }, next) => {
+	controller.on('init', async({ controller }, next) => {
 		const versionText = 'bbwheelsonline.com';
 
 		controller.log.imageText({
@@ -19,14 +19,14 @@ export const middleware = (controller) => {
 			style: `color: ${controller.log.colors.indigo}; font-weight: bold;`,
 		});
 
-		next();
+		await next();
 	});
 
 	// scroll to top
 	controller.on('afterStore', scrollToTop);
 
 	// facets mutation
-	controller.on('afterStore', ({ controller }, next) => {
+	controller.on('afterStore', async({ controller }, next) => {
 		const { facets } = controller.store;
 
 		facets.forEach((facet) => {
@@ -111,11 +111,11 @@ export const middleware = (controller) => {
 			}
 		});
 
-		next();
+		await next();
 	});
 
 	// results mutation
-	controller.on('afterStore', ({ controller }, next) => {
+	controller.on('afterStore', async({ controller }, next) => {
 		const { results } = controller.store;
 
 		// ratings star classes
@@ -123,7 +123,7 @@ export const middleware = (controller) => {
 		const half_star = 'yotpo-icon-half-star';
 		const empty_star = 'yotpo-icon-empty-star';
 
-		results.forEach((result) => {
+		results.filter(result => result.type == 'product').forEach((result) => {
 			// create array of ratings stars
 			var rating = result.attributes.reviews_product_score;
 
@@ -161,12 +161,12 @@ export const middleware = (controller) => {
 			}
 		});
 
-		next();
+		await next();
 	});
 
 	// log the store
-	controller.on('afterStore', ({ controller }, next) => {
+	controller.on('afterStore', async({ controller }, next) => {
 		controller.log.debug('store', controller.store.toJSON());
-		next();
+		await next();
 	});
 };

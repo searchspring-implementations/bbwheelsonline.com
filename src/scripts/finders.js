@@ -42,7 +42,7 @@ async function targetAndRender({ controller }, next) {
 	await next();
 }
 
-function removeFillerEntries({ controller, response }, next) {
+async function removeFillerEntries({ controller, response }, next) {
 	if (controller.config.type == 'ymm') {
 		response.facets.forEach((facet) => {
 			facet.values = facet.values.filter((value) => {
@@ -51,10 +51,10 @@ function removeFillerEntries({ controller, response }, next) {
 		});
 	}
 
-	next();
+	await next();
 }
 
-function sortYears({ controller }, next) {
+async function sortYears({ controller }, next) {
 	if (controller.config.type == 'ymm') {
 		const { selections } = controller.store;
 
@@ -65,5 +65,5 @@ function sortYears({ controller }, next) {
 		});
 	}
 
-	next();
+	await next();
 }
