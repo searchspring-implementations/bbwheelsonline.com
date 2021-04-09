@@ -2,11 +2,12 @@ import { h, Component, Fragment } from 'preact';
 import { observer } from 'mobx-react';
 
 import { Banner } from '@searchspring/snap-preact-components';
-import { currency, truncate, handleize } from '@searchspring/snap-toolbox/filters';
+import { filters } from '@searchspring/snap-toolbox';
 
 import { InlineBanner } from './InlineBanner';
 import { Profile } from './Profile';
 
+const { currency, truncate, handleize } = filters;
 @observer
 export class Autocomplete extends Component {
 	render() {

@@ -164,8 +164,8 @@ class FacetOptionsHierarchy extends Component {
 			<ul class={`ss-hierarchy navList ${facet.overflow.remaining && !facet.search.input ? '' : 'ss-show-overflow'}`}>
 				{values.map((value) => (
 					<li
-						class={`ss-hierarchy-option navList-item ${value.filtered && 'ss-hierarchy-current'} ${
-							value.history && !value.active && 'ss-hierarchy-return'
+						className={`ss-hierarchy-option navList-item ${value.filtered ? 'ss-hierarchy-current' : ''} ${
+							(value.history && !value.active) ? 'ss-hierarchy-return' : ''
 						}`}
 					>
 						{value.filtered ? (

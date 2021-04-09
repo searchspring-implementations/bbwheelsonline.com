@@ -1,10 +1,11 @@
 import { h, Fragment, Component } from 'preact';
 import { observer } from 'mobx-react';
 
-import { currency } from '@searchspring/snap-toolbox/filters';
+import { filters } from '@searchspring/snap-toolbox';
 
 import { Profile } from './Profile';
 
+const { currency } = filters;
 @observer
 export class Result extends Component {
 	render() {
