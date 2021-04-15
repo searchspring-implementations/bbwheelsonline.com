@@ -5,12 +5,11 @@
 	"scripts": {
 		"analyze": "webpack --config webpack.prod.js --analyze",
 		"build": "rm -rf ./dist && webpack --config webpack.prod.js",
-		"cypress": "cypress open --project testing",
-		"dev": "webpack serve --config webpack.dev.js",
+		"cypress": "cypress open --project tests",
+		"dev": "kill $(lsof -ti:3333,8888); webpack serve --config webpack.dev.js",
 		"format": "prettier --write \"**/*.{js,ts,json}\"",
 		"lint": "eslint --fix \"**/*.{js,ts}\"",
-		"test": "cypress run --project testing",
-		"serve": "webpack serve --config webpack.prod.js"
+		"test": "kill $(lsof -ti:3333,8888); webpack serve --config webpack.prod.js & (cypress run --project tests && kill $(lsof -ti:3333,8888))"
 	},
 	"author": "kevin",
 	"searchspring": {

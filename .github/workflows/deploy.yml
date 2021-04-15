@@ -38,10 +38,7 @@ jobs:
       - name: Build bundle
         run: npm run build
 
-      # - name: Start server
-      #   run: npm run serve &
-
-      # - name: Run Cypress
+      # - name: Run Tests
       #   run: npm run test
 
       - name: Extract Variables
