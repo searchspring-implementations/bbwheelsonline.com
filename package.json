@@ -48,7 +48,7 @@
 		"babel-eslint": "^10.1.0",
 		"babel-loader": "^8.2.2",
 		"core-js": "^3.10.1",
-		"css-loader": "^5.2.1",
+		"css-loader": "^5.2.3",
 		"cypress": "^7.1.0",
 		"eslint": "^7.24.0",
 		"eslint-plugin-react": "^7.23.2",
