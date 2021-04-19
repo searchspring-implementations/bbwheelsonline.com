@@ -59,6 +59,10 @@ jobs:
           aws-secret-access-key: ${{ secrets.SNAPFU_AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-2
 
-      - name: Copy files to s3
+      - name: Copy Files to S3
         run: |
           aws s3 sync --delete --acl public-read dist s3://${{secrets.SNAPFU_AWS_BUCKET}}/${{ steps.variables.outputs.siteId }}/${{ steps.variables.outputs.branch }}
+
+      - name: Invalidate Cloudfront Cache
+        run: |
+          aws cloudfront create-invalidation --distribution-id ${{secrets.SNAPFU_AWS_DISTRIBUTION_ID}} --paths "/${{ steps.variables.outputs.siteId }}/${{ steps.variables.outputs.branch }}/*"
