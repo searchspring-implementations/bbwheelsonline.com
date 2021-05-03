@@ -64,6 +64,7 @@ jobs:
           aws s3 sync --delete --acl public-read dist s3://${{secrets.SNAPFU_AWS_BUCKET}}/${{ steps.variables.outputs.siteId }}/${{ steps.variables.outputs.branch }}
 
       - name: Invalidate Branch Cloudfront Cache
+        if: steps.variables.outputs.branch != 'production'
         run: |
           aws cloudfront create-invalidation --distribution-id ${{secrets.SNAPFU_AWS_DISTRIBUTION_ID}} --paths "/${{ steps.variables.outputs.siteId }}/${{ steps.variables.outputs.branch }}/*"
 
