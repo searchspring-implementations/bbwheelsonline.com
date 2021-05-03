@@ -2,9 +2,9 @@ import { h, Fragment, render } from 'preact';
 import { configure as configureMobx } from 'mobx';
 
 /* searchspring imports */
-import SnapClient from '@searchspring/snap-client-javascript';
+import { SnapClient } from '@searchspring/snap-client-javascript';
 
-import { UrlManager, HybridTranslator, reactLinker } from '@searchspring/snap-url-manager';
+import { UrlManager, UrlTranslator, reactLinker } from '@searchspring/snap-url-manager';
 import { EventManager } from '@searchspring/snap-event-manager';
 import { Profiler } from '@searchspring/snap-profiler';
 import { Logger } from '@searchspring/snap-logger';
@@ -99,7 +99,7 @@ figure out how to handle 'global' config
 build helper package
 
 
-const urlManager = new UrlManager(new HybridTranslator({ queryParameter: 'search_query' }), reactLinker);
+const urlManager = new UrlManager(new UrlTranslator({ queryParameter: 'search_query' }), reactLinker);
 const store = new SearchStore(searchConfig, { urlManager });
 
 const search = new SearchController(searchConfig, {
@@ -116,7 +116,7 @@ const search = new SearchController(searchConfig, {
 const search = new SearchController(searchConfig, {
 	client,
 	store: new SearchStore(),
-	urlManager: new UrlManager(new HybridTranslator({ queryParameter: 'search_query' }), reactLinker),
+	urlManager: new UrlManager(new UrlTranslator({ queryParameter: 'search_query' }), reactLinker),
 	eventManager: new EventManager(),
 	profiler: new Profiler(),
 	logger: new Logger()
@@ -241,7 +241,7 @@ const acsearchConfig = {
 const acsearch = new AutocompleteController(acsearchConfig, {
 	client,
 	store: new AutocompleteStore(),
-	urlManager: new UrlManager(new HybridTranslator({ queryParameter: 'search_query' }), reactLinker),
+	urlManager: new UrlManager(new UrlTranslator({ queryParameter: 'search_query' }), reactLinker),
 	eventManager: new EventManager(),
 	profiler: new Profiler(),
 	logger: new Logger()
@@ -368,7 +368,7 @@ finderConfigs.forEach((finderConfig) => {
 	const finderInstance = new FinderController(finderConfig, {
 		client,
 		store: new FinderStore(),
-		urlManager: new UrlManager(new HybridTranslator(), reactLinker),
+		urlManager: new UrlManager(new UrlTranslator(), reactLinker),
 		eventManager: new EventManager(),
 		profiler: new Profiler(),
 		logger: new Logger()
