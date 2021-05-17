@@ -57,12 +57,12 @@ Cypress.Commands.add('addScripts', (scripts = []) => {
 });
 
 Cypress.Commands.add('addLocalSnap', () => {
-	cy.intercept('localhost:3333/dist/bundle.js').as('script');
+	cy.intercept(/.*localhost:3333\/dist\/bundle.js$/).as('script');
 	cy.addScript('https://localhost:3333/dist/bundle.js');
 });
 
 Cypress.Commands.add('addCloudSnap', (branch = 'master') => {
-	cy.intercept(/https:\/\/snapui.searchspring.io\/.*\/bundle.js/).as('script');
+	cy.intercept(/.*snapui.searchspring.io\/.*\/bundle.js$/).as('script');
 	cy.addScript(`https://snapui.searchspring.io/${config.searchspring.siteId}/${branch}/bundle.js`);
 });
 

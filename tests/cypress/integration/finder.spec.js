@@ -234,11 +234,11 @@ config?.finderConfigs?.forEach((finder, _i) => {
 								select = select[index];
 								const valueToSelect = store.selections[index].data && store.selections[index].data.filter((option) => option.count > 1).shift().value;
 								if (valueToSelect) {
-									cy.get(select).select(valueToSelect);
+									cy.get(select).select(`${valueToSelect}`);
 									cy.snapStore(`finders.${finder?.id}`).then((store) => {
-										expect(select.value).to.equal(valueToSelect);
-										expect(store.selections[index].selected).to.equal(valueToSelect);
-										expect(store.storage.state[`ss-finder-${finder.id}`][finder.fields[index].field].selected).to.equal(valueToSelect);
+										expect(select.value).to.equal(`${valueToSelect}`);
+										expect(store.selections[index].selected).to.equal(`${valueToSelect}`);
+										expect(store.storage.state[`ss-finder-${finder.id}`][finder.fields[index].field].selected).to.equal(`${valueToSelect}`);
 									});
 								}
 							});
@@ -257,9 +257,9 @@ config?.finderConfigs?.forEach((finder, _i) => {
 							const valueToSelect = ''; // clear selection
 							cy.get(select).select(valueToSelect);
 							cy.snapStore(`finders.${finder?.id}`).then((store) => {
-								expect(select.value).to.equal(valueToSelect);
-								expect(store.selections[dropdownToClear].selected).to.equal(valueToSelect);
-								expect(store.storage.state[`ss-finder-${finder.id}`][finder.fields[dropdownToClear].field].selected).to.equal(valueToSelect);
+								expect(select.value).to.equal(`${valueToSelect}`);
+								expect(store.selections[dropdownToClear].selected).to.equal(`${valueToSelect}`);
+								expect(store.storage.state[`ss-finder-${finder.id}`][finder.fields[dropdownToClear].field].selected).to.equal(`${valueToSelect}`);
 							});
 						});
 				});
@@ -275,11 +275,11 @@ config?.finderConfigs?.forEach((finder, _i) => {
 								select = select[index];
 								const valueToSelect = store.selections[index].data && store.selections[index].data.filter((option) => option.count > 1).shift().value;
 								if (valueToSelect) {
-									cy.get(select).select(valueToSelect);
+									cy.get(select).select(`${valueToSelect}`);
 									cy.snapStore(`finders.${finder?.id}`).then((store) => {
-										expect(select.value).to.equal(valueToSelect);
-										expect(store.selections[index].selected).to.equal(valueToSelect);
-										expect(store.storage.state[`ss-finder-${finder.id}`][finder.fields[index].field].selected).to.equal(valueToSelect);
+										expect(select.value).to.equal(`${valueToSelect}`);
+										expect(store.selections[index].selected).to.equal(`${valueToSelect}`);
+										expect(store.storage.state[`ss-finder-${finder.id}`][finder.fields[index].field].selected).to.equal(`${valueToSelect}`);
 									});
 								}
 							});

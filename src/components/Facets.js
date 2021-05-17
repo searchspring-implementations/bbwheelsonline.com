@@ -64,11 +64,11 @@ export class Facet extends Component {
 
 		return (
 			facet && (
-				<Profile name={`Facet-${facet.field}`}  controller={controller}>
+				<Profile name={`Facet-${facet.field}`} controller={controller}>
 					<div class="accordion-block">
 						<div
 							id={`ss-${facet.field}`}
-							class={`ss-facet-container ss-facet-container-${facet.display} accordion-navigation toggleLink ${facet.collapse ? '' : 'is-open'}`}
+							class={`ss-facet-container ss-facet-container-${facet.display} accordion-navigation toggleLink ${facet.collapsed ? '' : 'is-open'}`}
 						>
 							<h5
 								onClick={() => {
@@ -105,7 +105,7 @@ export class Facet extends Component {
 								</svg>
 							</div>
 
-							<div id="facetedSearch-content--{{ facet.label }}" class={`accordion-content ${facet.collapse ? '' : 'is-open'}`}>
+							<div id="facetedSearch-content--{{ facet.label }}" class={`accordion-content ${facet.collapsed ? '' : 'is-open'}`}>
 								{facet?.values?.length > 10 && (
 									<div class="ss-search-options">
 										<input
@@ -120,7 +120,7 @@ export class Facet extends Component {
 									</div>
 								)}
 
-								{!facet.collapse &&
+								{!facet.collapsed &&
 									(() => {
 										switch (facet.display) {
 											case 'hierarchy':
@@ -165,7 +165,7 @@ class FacetOptionsHierarchy extends Component {
 				{values.map((value) => (
 					<li
 						className={`ss-hierarchy-option navList-item ${value.filtered ? 'ss-hierarchy-current' : ''} ${
-							(value.history && !value.active) ? 'ss-hierarchy-return' : ''
+							value.history && !value.active ? 'ss-hierarchy-return' : ''
 						}`}
 					>
 						{value.filtered ? (

@@ -31,15 +31,15 @@ export class Autocomplete extends Component {
 		};
 
 		const emIfy = (term) => {
-			const match = term.match(search.query);
+			const match = term.match(search.query.string);
 
 			if (match) {
 				const beforeMatch = <em>{term.slice(0, match.index)}</em>;
-				const afterMatch = <em>{term.slice(match.index + search.query.length, term.length)}</em>;
+				const afterMatch = <em>{term.slice(match.index + search.query.string.length, term.length)}</em>;
 				return (
 					<Fragment>
 						{beforeMatch}
-						{search.query}
+						{search.query.string}
 						{afterMatch}
 					</Fragment>
 				);
@@ -93,12 +93,10 @@ export class Autocomplete extends Component {
 													<h4 class="ss-title">{facet.label}</h4>
 
 													{/* facet switch on facet.display */}
-													{
-														{
-															grid: <AutocompleteFacetGrid facet={facet} mouseEvents={mouseEvents} />,
-															palette: <AutocompleteFacetPalette facet={facet} mouseEvents={mouseEvents} />,
-														}[facet.display] || <AutocompleteFacetList facet={facet} mouseEvents={mouseEvents} />
-													}
+													{{
+														grid: <AutocompleteFacetGrid facet={facet} mouseEvents={mouseEvents} />,
+														palette: <AutocompleteFacetPalette facet={facet} mouseEvents={mouseEvents} />,
+													}[facet.display] || <AutocompleteFacetList facet={facet} mouseEvents={mouseEvents} />}
 
 													{/* {(() => {
 														switch (facet.display) {
@@ -125,11 +123,9 @@ export class Autocomplete extends Component {
 									<ul class="ss-ac-item-container">
 										{results.map((result, index) => (
 											<li class="ss-ac-item" key={result.id}>
-												{
-													{
-														banner: <InlineBanner content={result} />
-													}[result.type] || <AutocompleteResult result={result} />
-												}
+												{{
+													banner: <InlineBanner content={result} />,
+												}[result.type] || <AutocompleteResult result={result} />}
 
 												{/* {(() => {
 													switch (result.type) {
@@ -152,7 +148,7 @@ export class Autocomplete extends Component {
 
 									{results.length == 0 && (
 										<div class="ss-ac-no-results">
-											<p>No results found for "{search.query}". Please try another search.</p>
+											<p>No results found for "{search.query.string}". Please try another search.</p>
 										</div>
 									)}
 								</div>
@@ -161,7 +157,7 @@ export class Autocomplete extends Component {
 									<div id="ss-ac-see-more" className={`${facets.length ? 'ss-ac-see-more-padding' : ''}`}>
 										<a href={state.url.href} class="ss-ac-see-more-link">
 											See {pagination.totalResults} {filters.length > 0 ? 'filtered' : ''} result{pagination.totalResults > 1 ? 's' : ''} for "
-											{search.query}"
+											{search.query.string}"
 										</a>
 									</div>
 								)}
@@ -285,18 +281,14 @@ class AutocompleteResult extends Component {
 					<p class="ss-ac-item-name">{truncate(result.mappings.core.name, 40, '…')}</p>
 
 					<p class="ss-ac-item-price">
-						{result.mappings.core.msrp > result.mappings.core.price && (
-							<span class="ss-ac-item-msrp">{currency(result.mappings.core.msrp)}</span>
-						)}
+						{result.mappings.core.msrp > result.mappings.core.price && <span class="ss-ac-item-msrp">{currency(result.mappings.core.msrp)}</span>}
 						&nbsp;
-						<span
-							className={`ss-ac-item-regular ${result.mappings.core.msrp > result.mappings.core.price ? 'ss-ac-item-on-sale' : ''}`}
-						>
+						<span className={`ss-ac-item-regular ${result.mappings.core.msrp > result.mappings.core.price ? 'ss-ac-item-on-sale' : ''}`}>
 							{currency(result.mappings.core.price)}
 						</span>
 					</p>
 				</div>
 			</a>
-		)
+		);
 	}
 }

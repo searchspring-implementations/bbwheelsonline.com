@@ -70,6 +70,13 @@ config?.pages?.forEach((page, _i) => {
 					expect(store.pagination.page).to.equal(1);
 				});
 			});
+			it('saves a screenshot', () => {
+				cy.snapStore().then((store) => {
+					if (page.id.toLowerCase() === 'search') {
+						cy.screenshot('snapshot', { capture: 'viewport' });
+					}
+				});
+			});
 		});
 
 		describe('Pagination', () => {
@@ -178,13 +185,13 @@ config?.pages?.forEach((page, _i) => {
 					cy.get(config.selectors.sidebar.facetWrapper).each((el, index) => {
 						// for each facet, expect the facet collapse state to be correct
 						let isCollapsed = !el.find(config.selectors.sidebar.facetOpenClass).length > 0;
-						expect(store.facets[index].collapse).to.equal(isCollapsed);
+						expect(store.facets[index].collapsed).to.equal(isCollapsed);
 						// click on the facet collapse button to toggle collapse
 						cy.get(el.find(config.selectors.sidebar.facetCollapseButton)).click();
 						cy.snapStore().then((store) => {
 							// check to see if collapse state was toggled in store
 							isCollapsed = !el.find(config.selectors.sidebar.facetOpenClass).length > 0;
-							expect(store.facets[index].collapse).to.equal(isCollapsed);
+							expect(store.facets[index].collapsed).to.equal(isCollapsed);
 						});
 					});
 				});
@@ -208,7 +215,7 @@ config?.pages?.forEach((page, _i) => {
 						.then(() => {
 							// ensure facet is not collapsed
 							facetElementsWithOverflow.forEach((overflowingFacet, index) => {
-								if (overflowFacets[index].collapse) {
+								if (overflowFacets[index].collapsed) {
 									// toggle visibility if collapsed
 									cy.get(overflowingFacet.find(config.selectors.sidebar.facetCollapseButton)).click();
 								}
@@ -290,7 +297,7 @@ config?.pages?.forEach((page, _i) => {
 								const title = facet.find(config.selectors.sidebar.facetTitle);
 								if (!facetListElement && listFacet.label === title.text()) {
 									facetListElement = facet;
-									if (listFacet.collapse) {
+									if (listFacet.collapsed) {
 										// toggle visibility if collapsed
 										cy.get(facet.find(config.selectors.sidebar.facetCollapseButton)).click();
 									}
@@ -350,7 +357,7 @@ config?.pages?.forEach((page, _i) => {
 								const title = facet.find(config.selectors.sidebar.facetTitle);
 								if (!facetGridElement && gridFacet.label === title.text()) {
 									facetGridElement = facet;
-									if (gridFacet.collapse) {
+									if (gridFacet.collapsed) {
 										// toggle visibility if collapsed
 										cy.get(facet.find(config.selectors.sidebar.facetCollapseButton)).click();
 									}
@@ -391,7 +398,7 @@ config?.pages?.forEach((page, _i) => {
 								const title = facet.find(config.selectors.sidebar.facetTitle);
 								if (!facetPaletteElement && paletteFacet.label === title.text()) {
 									facetPaletteElement = facet;
-									if (paletteFacet.collapse) {
+									if (paletteFacet.collapsed) {
 										// toggle visibility if collapsed
 										cy.get(facet.find(config.selectors.sidebar.facetCollapseButton)).click();
 									}
@@ -429,7 +436,7 @@ config?.pages?.forEach((page, _i) => {
 								const title = facet.find(config.selectors.sidebar.facetTitle);
 								if (!facetSliderElement && sliderFacet.label === title.text()) {
 									facetSliderElement = facet;
-									if (sliderFacet.collapse) {
+									if (sliderFacet.collapsed) {
 										// toggle visibility if collapsed
 										cy.get(facet.find(config.selectors.sidebar.facetCollapseButton)).click();
 									}
@@ -485,7 +492,7 @@ config?.pages?.forEach((page, _i) => {
 								const title = facet.find(config.selectors.sidebar.facetTitle);
 								if (!facetHierarchyElement && hierarchyFacet.label === title.text()) {
 									facetHierarchyElement = facet;
-									if (hierarchyFacet.collapse) {
+									if (hierarchyFacet.collapsed) {
 										// toggle visibility if collapsed
 										cy.get(facet.find(config.selectors.sidebar.facetCollapseButton)).click();
 									}

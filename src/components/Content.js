@@ -24,7 +24,7 @@ export class Content extends Component {
 			<StoreProvider store={store}>
 				<Profile name="Content" controller={controller}>
 					<div class="ss-header-container">
-						{store.loaded && ( 
+						{store.loaded && (
 							<h2 class="ss-title ss-results-title">
 								<span>Showing </span>
 								{pagination.multiplePages === true && (
@@ -36,17 +36,20 @@ export class Content extends Component {
 								<span class="ss-results-count-total">{pagination.totalResults}</span>
 								<span>
 									{' '}
-									result{pagination.totalResults == 1 ? '' : 's'} {search.query ? 'for \u0022' + search.query + '\u0022' : ''}
+									result{pagination.totalResults == 1 ? '' : 's'} {search.query.string ? 'for \u0022' + search.query.string + '\u0022' : ''}
 								</span>
 							</h2>
 						)}
 
-						
-						{originalQuery && 
+						{originalQuery && (
 							<div class="ss-oq">
-								Search instead for "<a class="ss-oq-link" href={originalQuery.url.href}>{originalQuery.query}</a>"
+								Search instead for "
+								<a class="ss-oq-link" href={originalQuery.url.href}>
+									{originalQuery.string}
+								</a>
+								"
 							</div>
-						}
+						)}
 						<Banner content={store.merchandising.content} type="header" />
 					</div>
 

@@ -2,7 +2,7 @@ import { h, Fragment, render } from 'preact';
 import { configure as configureMobx } from 'mobx';
 
 /* searchspring imports */
-import { SnapClient } from '@searchspring/snap-client-javascript';
+import { SnapClient } from '@searchspring/snap-client';
 
 import { UrlManager, UrlTranslator, reactLinker } from '@searchspring/snap-url-manager';
 import { EventManager } from '@searchspring/snap-event-manager';
@@ -119,7 +119,7 @@ const search = new SearchController(searchConfig, {
 	urlManager: new UrlManager(new UrlTranslator({ queryParameter: 'search_query' }), reactLinker),
 	eventManager: new EventManager(),
 	profiler: new Profiler(),
-	logger: new Logger()
+	logger: new Logger(),
 });
 
 // custom codez
@@ -244,10 +244,10 @@ const acsearch = new AutocompleteController(acsearchConfig, {
 	urlManager: new UrlManager(new UrlTranslator({ queryParameter: 'search_query' }), reactLinker),
 	eventManager: new EventManager(),
 	profiler: new Profiler(),
-	logger: new Logger()
+	logger: new Logger(),
 });
 
-acsearch.on('focusChange', async({ controller }, next) => {
+acsearch.on('focusChange', async ({ controller }, next) => {
 	if (controller.store.state.focusedInput) {
 		document.querySelectorAll('html, body').forEach((elem) => {
 			elem.classList.add('ss-ac-open');
@@ -371,7 +371,7 @@ finderConfigs.forEach((finderConfig) => {
 		urlManager: new UrlManager(new UrlTranslator(), reactLinker),
 		eventManager: new EventManager(),
 		profiler: new Profiler(),
-		logger: new Logger()
+		logger: new Logger(),
 	});
 
 	finderInstance.use(finderware);
