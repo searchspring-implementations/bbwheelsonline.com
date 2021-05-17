@@ -36,7 +36,7 @@ export class Content extends Component {
 								<span class="ss-results-count-total">{pagination.totalResults}</span>
 								<span>
 									{' '}
-									result{pagination.totalResults == 1 ? '' : 's'} {search.query.string ? 'for \u0022' + search.query.string + '\u0022' : ''}
+									result{pagination.totalResults == 1 ? '' : 's'} {search.query?.string ? 'for \u0022' + search.query?.string + '\u0022' : ''}
 								</span>
 							</h2>
 						)}
