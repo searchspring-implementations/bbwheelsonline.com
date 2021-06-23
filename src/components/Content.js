@@ -1,10 +1,9 @@
 import { h, Fragment, Component } from 'preact';
 import { observer } from 'mobx-react';
 
-import { Slideout, useMediaQuery } from '@searchspring/snap-preact-components';
+import { Slideout, useMediaQuery, ControllerProvider, StoreProvider, withStore } from '@searchspring/snap-preact-components';
 import { Banner } from '@searchspring/snap-preact-components';
 
-import { StoreProvider, withStore } from '../services/providers';
 import { Profile } from './Profile';
 import { Results, NoResults } from './Results';
 import { FilterSummary } from './FilterSummary';
@@ -14,60 +13,62 @@ import { Facets } from '../components/Facets';
 export class Content extends Component {
 	render() {
 		const store = this.props.store;
-		const controller = store.controller;
+		const controller = this.props.controller;
 		const pagination = store.pagination;
 		const search = store.search;
 		const isMobile = useMediaQuery('(max-width: 800px)');
 		const originalQuery = store.search.originalQuery;
 
 		return (
-			<StoreProvider store={store}>
-				<Profile name="Content" controller={controller}>
-					<div class="ss-header-container">
-						{store.loaded && (
-							<h2 class="ss-title ss-results-title">
-								<span>Showing </span>
-								{pagination.multiplePages === true && (
-									<span class="ss-results-count-range">
-										{pagination.begin} - {pagination.end}
+			<ControllerProvider controller={controller}>
+				<StoreProvider store={store}>
+					<Profile name="Content" controller={controller}>
+						<div class="ss-header-container">
+							{store.loaded && (
+								<h2 class="ss-title ss-results-title">
+									<span>Showing </span>
+									{pagination.multiplePages === true && (
+										<span class="ss-results-count-range">
+											{pagination.begin} - {pagination.end}
+										</span>
+									)}
+									{pagination.multiplePages ? ' of ' : ''}
+									<span class="ss-results-count-total">{pagination.totalResults}</span>
+									<span>
+										{' '}
+										result{pagination.totalResults == 1 ? '' : 's'} {search.query?.string ? 'for \u0022' + search.query?.string + '\u0022' : ''}
 									</span>
-								)}
-								{pagination.multiplePages ? ' of ' : ''}
-								<span class="ss-results-count-total">{pagination.totalResults}</span>
-								<span>
-									{' '}
-									result{pagination.totalResults == 1 ? '' : 's'} {search.query?.string ? 'for \u0022' + search.query?.string + '\u0022' : ''}
-								</span>
-							</h2>
-						)}
+								</h2>
+							)}
 
-						{originalQuery && (
-							<div class="ss-oq">
-								Search instead for "
-								<a class="ss-oq-link" href={originalQuery.url.href}>
-									{originalQuery.string}
-								</a>
-								"
-							</div>
-						)}
-						<Banner content={store.merchandising.content} type="header" />
-					</div>
+							{originalQuery && (
+								<div class="ss-oq">
+									Search instead for "
+									<a class="ss-oq-link" href={originalQuery.url.href}>
+										{originalQuery.string}
+									</a>
+									"
+								</div>
+							)}
+							<Banner content={store.merchandising.content} type="header" />
+						</div>
 
-					<div class="ss-filter-container">
-						{isMobile && (
-							<div class="ss-slideout-toolbar">
-								<FilterSummary />
+						<div class="ss-filter-container">
+							{isMobile && (
+								<div class="ss-slideout-toolbar">
+									<FilterSummary />
 
-								<Slideout buttonContent={store.facets.length && store.pagination.totalResults && <SlideoutButton />}>
-									<SlideoutContent />
-								</Slideout>
-							</div>
-						)}
-					</div>
+									<Slideout buttonContent={store.facets.length && store.pagination.totalResults && <SlideoutButton />}>
+										<SlideoutContent />
+									</Slideout>
+								</div>
+							)}
+						</div>
 
-					{pagination.totalResults ? <Results /> : pagination.totalResults === 0 && <NoResults />}
-				</Profile>
-			</StoreProvider>
+						{pagination.totalResults ? <Results /> : pagination.totalResults === 0 && <NoResults />}
+					</Profile>
+				</StoreProvider>
+			</ControllerProvider>
 		);
 	}
 }

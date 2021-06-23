@@ -1,9 +1,8 @@
 import { h, Fragment, Component } from 'preact';
 import { observer } from 'mobx-react';
 
-import { useMediaQuery } from '@searchspring/snap-preact-components';
+import { useMediaQuery, StoreProvider, ControllerProvider, withStore } from '@searchspring/snap-preact-components';
 
-import { StoreProvider, withStore } from '../services/providers';
 import { Profile } from './Profile';
 import { DesktopFacets } from './Facets';
 import { FilterSummary } from './FilterSummary';
@@ -12,19 +11,21 @@ import { FilterSummary } from './FilterSummary';
 export class Sidebar extends Component {
 	render() {
 		const store = this.props.store;
-		const controller = store.controller;
+		const controller = this.props.controller;
 		const isDesktop = useMediaQuery('(min-width: 801px)');
 
 		return (
 			isDesktop && (
 				<StoreProvider store={store}>
-					<Profile name="Sidebar" controller={controller}>
-						<div id="facetedSearch" class="ss-sidebar-container facetedSearch sidebarBlock">
-							<FilterSummary />
-							<DesktopFacets />
-							<FilterMessages />
-						</div>
-					</Profile>
+					<ControllerProvider controller={controller}>
+						<Profile name="Sidebar" controller={controller}>
+							<div id="facetedSearch" class="ss-sidebar-container facetedSearch sidebarBlock">
+								<FilterSummary />
+								<DesktopFacets />
+								<FilterMessages />
+							</div>
+						</Profile>
+					</ControllerProvider>
 				</StoreProvider>
 			)
 		);

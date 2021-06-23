@@ -11,7 +11,8 @@ const { currency, truncate, handleize } = filters;
 @observer
 export class Autocomplete extends Component {
 	render() {
-		const { search, terms, results, merchandising, pagination, filters, facets, state, controller } = this.props.store;
+		const { search, terms, results, merchandising, pagination, filters, facets, state } = this.props.store;
+		const controller = this.props.controller;
 
 		const inputFocused = this.props.input === state.focusedInput;
 		const visible = inputFocused && terms.length > 0;

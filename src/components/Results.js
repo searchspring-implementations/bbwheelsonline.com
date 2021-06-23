@@ -1,9 +1,8 @@
 import { h, Fragment, Component } from 'preact';
 import { observer } from 'mobx-react';
 
-import { Banner } from '@searchspring/snap-preact-components';
+import { Banner, withController, withStore } from '@searchspring/snap-preact-components';
 
-import { withStore } from '../services/providers';
 import { Profile } from './Profile';
 import { Toolbar } from './Toolbar';
 import { Pagination } from './Pagination';
@@ -12,13 +11,14 @@ import { InlineBanner } from './InlineBanner';
 import { matchHeights, until } from '../scripts/functions';
 
 @withStore
+@withController
 @observer
 export class Results extends Component {
 	async componentDidMount() {
 		try {
 			await matchHeights();
 		} catch (err) {
-			this.props.store.controller.log.error('failed to match heights');
+			this.props.controller.log.error('failed to match heights');
 		}
 	}
 
@@ -30,7 +30,6 @@ export class Results extends Component {
 		const store = this.props.store;
 		const results = store.results;
 		const pagination = store.pagination;
-		const profiler = store.controller.profiler;
 
 		return (
 			<div class="ss-results">
@@ -44,11 +43,9 @@ export class Results extends Component {
 					<ul class="ss-item-container ss-item-container-grid productGrid">
 						{results.map((result) => (
 							<li class="product" key={result.id}>
-								{
-									{
-										banner: <InlineBanner content={result} />
-									}[result.type] || <Result result={result} />
-								}
+								{{
+									banner: <InlineBanner content={result} />,
+								}[result.type] || <Result result={result} />}
 							</li>
 						))}
 					</ul>
@@ -82,13 +79,11 @@ export class NoResults extends Component {
 		return (
 			<div class="ss-no-results">
 				<div class="ss-no-results-container">
-					{dym &&
+					{dym && (
 						<p class="ss-did-you-mean">
-							Did you mean <a href={dym.url.href}>
-								{ dym.query }
-							</a>?
+							Did you mean <a href={dym.url.href}>{dym.query}</a>?
 						</p>
-					}
+					)}
 				</div>
 
 				<div class="ss-no-results-container">

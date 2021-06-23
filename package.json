@@ -8,7 +8,7 @@
 		"cypress": "cypress open --project tests",
 		"dev": "kill $(lsof -ti:3333,8888); webpack serve --config webpack.dev.js",
 		"format": "prettier --write \"**/*.{js,ts,json}\"",
-		"lint": "eslint --fix \"**/*.{js,ts}\"",
+		"lint": "eslint --fix \"./src/**/*.{js,ts}\"",
 		"test": "kill $(lsof -ti:3333,8888); webpack serve --config webpack.prod.js & (cypress run --project tests && kill $(lsof -ti:3333,8888))",
 		"prepare": "husky install"
 	},
@@ -23,15 +23,16 @@
 	"license": "MIT",
 	"prettier": "@searchspring/prettier",
 	"dependencies": {
-		"@searchspring/snap-client": "^0.1.13",
-		"@searchspring/snap-controller": "^0.1.13",
-		"@searchspring/snap-event-manager": "^0.1.13",
-		"@searchspring/snap-logger": "^0.1.13",
-		"@searchspring/snap-preact-components": "0.1.13",
-		"@searchspring/snap-profiler": "^0.1.13",
-		"@searchspring/snap-store-mobx": "^0.1.13",
-		"@searchspring/snap-toolbox": "^0.1.13",
-		"@searchspring/snap-url-manager": "0.1.13",
+		"@searchspring/snap-client": "^0.2.0",
+		"@searchspring/snap-controller": "^0.2.0",
+		"@searchspring/snap-event-manager": "^0.2.0",
+		"@searchspring/snap-logger": "^0.2.0",
+		"@searchspring/snap-preact-components": "^0.3.5",
+		"@searchspring/snap-profiler": "^0.2.0",
+		"@searchspring/snap-store-mobx": "^0.2.0",
+		"@searchspring/snap-toolbox": "^0.2.0",
+		"@searchspring/snap-url-manager": "^0.2.0",
+		"@searchspring/snap-tracker": "^0.2.0",
 		"mobx": "^6.3.0",
 		"mobx-react": "^7.1.0",
 		"preact": "^10.5.13"
@@ -71,7 +72,7 @@
 		"./package.json": [
 			"prettier --write"
 		],
-		"*.{js,ts}": [
+		"./src/**/*.{js,ts}": [
 			"prettier --write",
 			"eslint --fix"
 		]

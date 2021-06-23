@@ -6,7 +6,8 @@ import { Profile } from './Profile';
 @observer
 export class Finder extends Component {
 	render() {
-		const { selections, controller, loading } = this.props.store;
+		const { selections, loading } = this.props.store;
+		const controller = this.props.controller;
 
 		return (
 			<Profile name={`Finder-${controller.config.id}`} controller={controller}>

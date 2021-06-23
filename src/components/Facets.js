@@ -2,9 +2,8 @@ import { h, Fragment, Component } from 'preact';
 import { observer } from 'mobx-react';
 
 import { Profile } from './Profile';
-import { withStore } from '../services/providers';
 
-import { Slider, Banner } from '@searchspring/snap-preact-components';
+import { Slider, Banner, withController, withStore } from '@searchspring/snap-preact-components';
 
 const sliderProps = {
 	trackColor: '#d01f27',
@@ -14,11 +13,12 @@ const sliderProps = {
 };
 
 @withStore
+@withController
 @observer
 export class DesktopFacets extends Component {
 	render() {
 		const { facets } = this.props.store;
-		const controller = this.props.store.controller;
+		const controller = this.props.controller;
 
 		return (
 			facets.length !== 0 && (
@@ -37,7 +37,6 @@ export class DesktopFacets extends Component {
 export class Facets extends Component {
 	render() {
 		const { facets, merchandising } = this.props.store;
-		const profiler = this.props.store.controller.profiler;
 
 		return (
 			facets.length !== 0 && (
@@ -56,11 +55,12 @@ export class Facets extends Component {
 }
 
 @withStore
+@withController
 @observer
 export class Facet extends Component {
 	render() {
 		const facet = this.props.facet;
-		const controller = this.props.store.controller;
+		const controller = this.props.controller;
 
 		return (
 			facet && (

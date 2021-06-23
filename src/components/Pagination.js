@@ -1,17 +1,18 @@
 import { h, Fragment, Component } from 'preact';
 import { observer } from 'mobx-react';
 
-import { withStore } from '../services/providers';
+import { withController, withStore } from '@searchspring/snap-preact-components';
 import { Profile } from './Profile';
 
 @withStore
+@withController
 @observer
 export class Pagination extends Component {
 	render() {
 		const store = this.props.store;
 		const pagination = store.pagination;
 		const pages = pagination.getPages(5);
-		const controller = this.props.store.controller;
+		const controller = this.props.controller;
 
 		return (
 			<Profile name="Pagination" controller={controller}>

@@ -30,7 +30,7 @@ async function targetAndRender({ controller }, next) {
 			// remove loading sibling element
 			elem.parentElement.querySelector('.search-loading')?.remove();
 
-			const finderComponent = <target.component store={controller.store} />;
+			const finderComponent = <target.component store={controller.store} controller={controller} />;
 			render(finderComponent, elem);
 		}
 	);
