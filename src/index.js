@@ -2,7 +2,7 @@ import { h, Fragment, render } from 'preact';
 import { configure as configureMobx } from 'mobx';
 
 /* searchspring imports */
-import { Client } from '@searchspring/snap-client';
+import { SnapClient } from '@searchspring/snap-client';
 import { Tracker } from '@searchspring/snap-tracker';
 import { UrlManager, UrlTranslator, reactLinker } from '@searchspring/snap-url-manager';
 import { EventManager } from '@searchspring/snap-event-manager';
@@ -41,7 +41,7 @@ let globals = {
 	siteId: searchspring.siteId,
 };
 
-const client = new Client(globals, clientConfig);
+const client = new SnapClient(globals, clientConfig);
 
 /*
 	search
