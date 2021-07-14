@@ -1,15 +1,15 @@
 import { h, Fragment, Component } from 'preact';
 import { observer } from 'mobx-react';
-
-import { withStore } from '../services/providers';
+import { withController, withStore } from '@searchspring/snap-preact-components';
 
 @withStore
+@withController
 @observer
 export class FilterSummary extends Component {
 	render() {
-		const { filters, controller } = this.props.store;
+		const { filters } = this.props.store;
+		const controller = this.props.controller;
 		const clearAll = controller.urlManager.remove('filter');
-
 		return (
 			filters.length > 0 && (
 				<div class="ss-summary facetedSearch-refineFilters sidebarBlock">

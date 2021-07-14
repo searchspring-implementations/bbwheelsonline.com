@@ -1,7 +1,7 @@
 import { h, Fragment, Component } from 'preact';
 import { observer } from 'mobx-react';
 
-import { withStore } from '../services/providers';
+import { withStore } from '@searchspring/snap-preact-components';
 import { Profile } from './Profile';
 import { Pagination } from './Pagination';
 

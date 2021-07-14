@@ -3,7 +3,7 @@ import { configure as configureMobx } from 'mobx';
 
 /* searchspring imports */
 import { SnapClient } from '@searchspring/snap-client';
-
+import { Tracker } from '@searchspring/snap-tracker';
 import { UrlManager, UrlTranslator, reactLinker } from '@searchspring/snap-url-manager';
 import { EventManager } from '@searchspring/snap-event-manager';
 import { Profiler } from '@searchspring/snap-profiler';
@@ -113,13 +113,16 @@ const search = new SearchController(searchConfig, {
 
 */
 
+const urlManager = new UrlManager(new UrlTranslator({ queryParameter: 'search_query' }), reactLinker);
+const tracker = new Tracker(globals);
 const search = new SearchController(searchConfig, {
 	client,
-	store: new SearchStore(),
-	urlManager: new UrlManager(new UrlTranslator({ queryParameter: 'search_query' }), reactLinker),
+	store: new SearchStore({}, { urlManager, tracker }),
+	urlManager,
 	eventManager: new EventManager(),
 	profiler: new Profiler(),
 	logger: new Logger(),
+	tracker,
 });
 
 // custom codez
@@ -146,7 +149,7 @@ search.on('init', async ({ controller }, next) => {
 		[
 			{
 				selector: '#searchspring-content',
-				component: <Content store={controller.store} />,
+				component: <Content store={controller.store} controller={controller} />,
 			},
 		],
 		(target, elem) => {
@@ -163,7 +166,7 @@ search.on('init', async ({ controller }, next) => {
 		[
 			{
 				selector: '#searchspring-sidebar',
-				component: <Sidebar store={controller.store} />,
+				component: <Sidebar store={controller.store} controller={controller} />,
 			},
 		],
 		(target, elem) => {
@@ -238,13 +241,15 @@ const acsearchConfig = {
 	},
 };
 
+const acurlManager = new UrlManager(new UrlTranslator({ queryParameter: 'search_query' }), reactLinker).detach(true);
 const acsearch = new AutocompleteController(acsearchConfig, {
 	client,
-	store: new AutocompleteStore(),
-	urlManager: new UrlManager(new UrlTranslator({ queryParameter: 'search_query' }), reactLinker),
+	store: new AutocompleteStore({}, { urlManager: acurlManager, tracker }),
+	urlManager: acurlManager,
 	eventManager: new EventManager(),
 	profiler: new Profiler(),
 	logger: new Logger(),
+	tracker,
 });
 
 acsearch.on('focusChange', async ({ controller }, next) => {
@@ -284,7 +289,7 @@ acsearch.on('init', async ({ controller }) => {
 			// bind to config selector
 			controller.bind();
 
-			const acComponent = <target.component store={controller.store} input={inputElem} />;
+			const acComponent = <target.component store={controller.store} controller={controller} input={inputElem} />;
 			render(acComponent, injectedElem);
 		}
 	);
@@ -365,13 +370,15 @@ const finderConfigs = [
 ];
 
 finderConfigs.forEach((finderConfig) => {
+	const finderurlManager = new UrlManager(new UrlTranslator({ queryParameter: 'search_query' }), reactLinker).detach(true);
 	const finderInstance = new FinderController(finderConfig, {
 		client,
-		store: new FinderStore(),
-		urlManager: new UrlManager(new UrlTranslator(), reactLinker),
+		store: new FinderStore(finderConfig, { urlManager: finderurlManager, tracker }),
+		urlManager: finderurlManager,
 		eventManager: new EventManager(),
 		profiler: new Profiler(),
 		logger: new Logger(),
+		tracker,
 	});
 
 	finderInstance.use(finderware);
